@@ -18,4 +18,4 @@ class TimeRegistration(models.Model):
     hours = models.FloatField()
 
     def __unicode__(self):
-        return self.hours
+        return unicode(self.hours)
