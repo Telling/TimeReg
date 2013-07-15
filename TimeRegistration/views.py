@@ -91,7 +91,7 @@ def home_statistics(request):
 
             return total_hours_by_month / len(average_pr_month)
 
-        context['average_monthly'] = average_weekly_hours()
+        context['average_monthly'] = average_monthly_hours()
 
     return render_to_response('index.html', RequestContext(request, context))
 
