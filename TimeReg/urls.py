@@ -5,13 +5,14 @@ admin.autodiscover()
 
 urlpatterns = patterns(
     '',
-    # Examples:
-    # url(r'^$', 'TimeReg.views.home', name='home'),
-    # url(r'^TimeReg/', include('TimeReg.foo.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
+    url(r'^$', 'TimeRegistration.views.home_statistics'),
+    url(r'^timereg/$', 'TimeRegistration.views.time_registration'),
+    url(r'^projects/$', 'TimeRegistration.views.projects'),
+    url(r'^account/$', 'TimeRegistration.views.account'),
+    url(r'^login/$', 'TimeRegistration.views.login_user'),
+    url(r'^tools/users/$', 'TimeRegistration.views.tools_users'),
+    url(r'^tools/projects/$', 'TimeRegistration.views.tools_projects'),
+    url(r'^logout/$', 'TimeRegistration.views.logout_user'),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 )

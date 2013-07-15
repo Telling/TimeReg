@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>TimeRegistration</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="{{ STATIC_URL }}css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+
+        <style type="text/css">
+            body {
+                padding-top: 40px;
+                padding-bottom: 40px;
+                background-color: #f5f5f5;
+            }
+
+            .form-signin {
+                max-width: 300px;
+                padding: 19px 29px 29px;
+                margin: 0 auto 20px;
+                background-color: #fff;
+                border: 1px solid #e5e5e5;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                    border-radius: 5px;
+                -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+                -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+                    box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            }
+
+            .form-signin .form-signin-heading,
+            .form-signin .checkbox {
+                margin-bottom: 10px;
+            }
+
+            .form-signin input[type="text"],
+            .form-signin input[type="password"] {
+                font-size: 16px;
+                height: auto;
+                margin-bottom: 15px;
+                padding: 7px 9px;
+            }
+
+            #logout-btn:hover {
+                color: red !important;
+            }
+        </style>
+        {% block head %}
+        {% endblock %}
+    </head>
+
+    <body>
+        {% if not user.is_authenticated %}
+                <div class="container">
+                    <form method="POST" action="/login/" accept-charset="UTF-8" class="form-signin"> {% csrf_token %}
+                        <h2 class="form-signing-heading">Please sign in</h2>
+
+                        {% if messages %}
+                            {% for message in messages %}
+                            <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        {% if next %}
+                            <input type="hidden" name="next" value="{{ next }}">
+                        {% endif %}
+                        <input type="text" id="username" class="input-block-level" name="username" placeholder="Username" value="{{ username }}">
+                        <input type="password" id="password" class="input-block-level" name="password" placeholder="Password" value="">
+                        <button type="submit" name="submit" class="btn btn-success btn-block">Sign in</button>
+                    </form>
+                </div>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+                <div class="container">
+                    <div class="masthead">
+                        <h3 class="muted">TimeReg</h3>
+                        <div class="navbar">
+                            <div class="navbar-inner">
+                                <div class="container">
+                                    <ul class="nav">
+                                        <li id="homeNav"><a href="/" id="homeNav">Home</a></li>
+                                        <li id="registrationNav"><a href="/timereg" id="registrationNav">Time registrations</a></li>
+                                        <li id="projectsNav"><a href="/projects" id="projectsNav">Projects</a></li>
+                                        <li id="accountNav"><a href="/account" id="accountNav">Account</a></li>
+                                        {% if user.is_superuser %}
+                                            <li class="dropdown" id="tools">
+                                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                    Tools
+                                                    <b class="caret"></b>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li id="tools-users">
+                                                        <a href="/tools/users">Users</a>
+                                                    </li>
+                                                    <li id="tools-projects">
+                                                        <a href="/tools/projects">Projects</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                    <ul class="nav pull-right">
+                                        <li><a href="#">{{ user.username }}</a></li>
+                                        <li class="divider-vertical"></li>
+                                        <li><button type="submit" class="btn"><a id="logout-btn" href="/logout">Logout</a></button></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+        {% endif %}
+        {% if user.is_authenticated %}
+        {% block content %}
+                        </div>
+                    </div>
+                </div>
+        {% endblock %}
+        {% endif %}
+
+
+        <script src="http://code.jquery.com/jquery.js"></script>
+        <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+        {% block scripts %}
+        {% endblock %}
+    </body>
+
+</html>

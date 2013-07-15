@@ -14,12 +14,15 @@ class Profile(models.Model):
 
 class TimeRegistration(models.Model):
     user = models.ForeignKey(User)
-    date = models.DateTimeField()
+    date = models.DateField()
+    week = models.IntegerField()
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
     hours = models.FloatField()
-    project = models.OneToOneField('Project')
+    project = models.ForeignKey('Project')
 
     def __unicode__(self):
-        return unicode(self.hours)
+        return '{} ({})'.format(unicode(self.hours), self.project)
 
 
 class Project(models.Model):
@@ -27,6 +30,7 @@ class Project(models.Model):
     project_id = models.IntegerField()
     manager = models.ForeignKey(User, null=True, blank=True)
     description = models.CharField(max_length=200, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return self.project_id
+        return '{}: {}'.format(unicode(self.project_id), self.name)
