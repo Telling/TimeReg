@@ -105,11 +105,14 @@
                                     <ul class="nav pull-right">
                                         <li><a href="#">{{ user.username }}</a></li>
                                         <li class="divider-vertical"></li>
-                                        <li><button type="submit" class="btn"><a id="logout-btn" href="/logout">Logout</a></button></a></li>
+                                        <li><a href="/logout/" id="logout-btn">Logout</a></li>
                                     </ul>
                                 </div>
                             </div>
         {% endif %}
+            <div class="row-fluid">
+                <div class="span"></div>
+            </div>
         {% if user.is_authenticated %}
         {% block content %}
                         </div>
