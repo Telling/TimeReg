@@ -1,23 +1,84 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<style>
-    #tools {
-        color: #555;
-        text-decoration: none;
-        background-color: #e5e5e5;
-        -webkit-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
-        -moz-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
-        box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
+    <style>
+        #tools {
+            color: #555;
+            text-decoration: none;
+            background-color: #e5e5e5;
+            -webkit-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
+            -moz-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
+            box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
+            }
+
+        #tools-projects {
+            color: #555;
+            text-decoration: none;
+            background-color: #e5e5e5;
+            -webkit-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
+            -moz-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
+            box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
+            }
+
+        #fix-control-label {
+            width: 65px;
         }
 
-    #tools-projects {
-        color: #555;
-        text-decoration: none;
-        background-color: #e5e5e5;
-        -webkit-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
-        -moz-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
-        box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
+        #fix-controls {
+            margin-left: 75px;
         }
-</style>
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="row-fluid">
+        <div class="span12 well">
+
+            <div class="row-fluid">
+                <div class="span11">
+                    <h2 class="tk-atrament-web">Projects adminsitration<i class="icon-edit"></i></h2>
+                </div>
+            </div>
+
+            <div class="span5">
+                <h3 class="muted">Create new project</h3>
+                <form class="form-horizontal" action="" method="POST">{% csrf_token %}
+                    <div class="control-group">
+                        <label class="control-label" id="fix-control-label" for="inputName">Name</label>
+                        <div class="controls" id="fix-controls">
+                            <input type="text" id="inputName" placeholder="Name" name="name" required>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        {{ project_form.manager.errors }}
+                        <label class="control-label" id="fix-control-label" for="inputManager">Manager</label>
+                        <div class="controls" id="fix-controls">
+                            {{ project_form.manager }}
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" id="fix-control-label" for="inputDesc">Description</label>
+                        <div class="controls" id="fix-controls">
+                            <input type="text" id="inputDesc" maxlength="200" placeholder="Description" name="description">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        {{ project_form.users.errors }}
+                        <label class="control-label" id="fix-control-label" for="inputUsers">Members</label>
+                        <div class="controls" id="fix-controls">
+                            {{ project_form.users }}
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls" id="fix-controls">
+                            <button type="submit" class="btn btn-success">Add project</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="span5 offset1">
+                <h3 class="muted">Close projects</h3>
+            </div>
+        </div>
 {% endblock %}

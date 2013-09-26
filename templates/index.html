@@ -1,16 +1,34 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<style>
-    #homeNav {
-        color: #555;
-        text-decoration: none;
-        background-color: #e5e5e5;
-        -webkit-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
-        -moz-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
-        box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
+    <style>
+        #homeNav {
+            color: #555;
+            text-decoration: none;
+            background-color: #e5e5e5;
+            -webkit-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
+            -moz-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
+            box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
+            }
+
+        #fix-control-label {
+            width: 65px;
         }
-</style>
+
+        #fix-controls {
+            margin-left: 75px;
+        }
+
+        .table td {
+            text-align: center !important;
+        }
+
+        #td-color {
+            background-color: #e5e5e5;
+        }
+    </style>
+
+    <link href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -20,78 +38,188 @@
 
             <div class="row-fluid">
                 <div class="span11">
-                    <h2 class="tk-atrament-web">Statistics <i class="icon-globe"></i></h2>
+                    <h2 class="tk-atrament-web">Time Registration<i class="icon-edit"></i></h2>
                 </div>
             </div>
 
+            <div class="span11">
+                <h3 class="muted">New Registration</h3>
+                <form class="form-horizontal" id="fix-width" action="/" method="POST">{% csrf_token %}
+                <div class="span5">
+                    <div class="control-group">
+                        <label class="control-label" id="fix-control-label" for="inputDate">Date</label>
+                        <div class="controls" id="fix-controls">
+                            <div class="input-append date" id="datetimepicker">
+                                <input data-format="yyyy-MM-dd" type="text" id="appendedInput" placeholder="Date" value="{{ current_date }}" name="date" required>
+                                <span class="add-on"><i data-date-icon="icon-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" id="fix-control-label" for="inputStartTime">Start Time</label>
+                        <div class="controls" id="fix-controls">
+                            <div class="input-append" id="timepicker1">
+                                <input data-format="hh:mm" type="text" id="inputStartTime" placeholder="Start Time (optional)" name="start_time">
+                                <span class="add-on"><i data-time-icon="icon-time"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" id="fix-control-label" for="inputEndTime">End Time</label>
+                        <div class="controls" id="fix-controls">
+                            <div class="input-append" id="timepicker2">
+                                <input data-format="hh:mm" type="text" id="inputEndTime" placeholder="End Time (optional)" name="end_time">
+                                <span class="add-on"><i data-time-icon="icon-time"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="span5 offset1">
+                    <div class="control-group">
+                        <label class="control-label" id="fix-control-label" for="inputHours">Hours</label>
+                        <div class="controls" id="fix-controls">
+                            <input type="text" id="inputHours" placeholder="Hours" name="hours" required>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        {{ form.project.errors }}
+                        <label class="control-label" id="fix-control-label" for="inputDate">Project</label>
+                        <div class="controls" id="fix-controls">
+                            {{ form.project }}
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls" id="fix-controls">
+                            <button type="submit" class="btn btn-success">Add Registration</button>
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+
             <div class="span5">
-                {% if timeregistrations %}
+                <h3 class="muted">Registrations</h3>
+                {% if registrations %}
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>Date</th>
                                 <th>Hours</th>
                                 <th>Project</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for registration in timeregistrations %}
-                                {% if forloop.counter <= 5 %}
-                                    <tr>
-                                        <td>{{ forloop.counter }}</td>
-                                        <td>{{ registration.hours }}</td>
-                                        <td>{{ registration.project.name }}</td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
+                        {% for registration in registrations %}
+                            <tr>
+                                <td style="text-align: left !important;">{{ registration.date }}</td>
+                                <td style="text-align: left !important;">{{ registration.hours }}</td>
+                                <td style="text-align: left !important;">{{ registration.project.name }}</td>
+                            </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
                 {% else %}
-                    <h3>You've got no registrations yet.</h3>
-                    <a href="/timereg"><button class="btn btn-success">Go Register!</button></a>
+                    You've got no registrations.
                 {% endif %}
             </div>
+
             <div class="span5 offset1">
-                {% if projects %}
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Project</th>
-                                <th>ID</th>
-                                <th>Hours total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for project in projects %}
-                                {% if forloop.counter <= 5 %}
-                                    <tr>
-                                        <td>{{ forloop.counter }}</td>
-                                        <td>{{ project.name }}</td>
-                                        <td>{{ project.id }}</td>
-                                        <td>{{ project.total_hours }}</td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
-            </div>
-            <div class="span8">
-                {% if timeregistrations %}
-                <dl>
-                    <dt>Average Daily Hours</dt>
-                    <dd>{{ average_daily|floatformat }}</dd>
-                    <br>
-                    <dt>Average Weekly Hours</dt>
-                    <dd>{{ average_weekly|floatformat }}</dd>
-                    <br>
-                    <dt>Average Monthly Hours</dt>
-                    <dd>{{ average_monthly|floatformat }}</dd>
-                </dl>
-                {% endif %}
+                <h3 class="muted">Week</h3>
+                <table class="table table-bordered" id="center-text">
+                    <tbody>
+                        <tr>
+                            <td><a href="/week/1">1</a></td>
+                            <td id="td-color"><a href="/week/2">2</a></td>
+                            <td><a href="/week/3">3</a></td>
+                            <td id="td-color"><a href="/week/4">4</a></td>
+                            <td><a href="/week/5">5</a></td>
+                            <td id="td-color"><a href="/week/6">6</a></td>
+                            <td><a href="/week/7">7</a></td>
+                            <td id="td-color"><a href="/week/8">8</a></td>
+                            <td><a href="/week/9">9</a></td>
+                            <td id="td-color"><a href="/week/10">10</a></td>
+                            <td><a href="/week/11">11</a></td>
+                            <td id="td-color"><a href="/week/12">12</a></td>
+                            <td><a href="/week/13">13</a></td>
+                        </tr>
+                        <tr>
+                            <td id="td-color"><a href="/week/14">14</a></td>
+                            <td><a href="/week/15">15</a></td>
+                            <td id="td-color"><a href="/week/16">16</a></td>
+                            <td><a href="/week/17">17</a></td>
+                            <td id="td-color"><a href="/week/18">18</a></td>
+                            <td><a href="/week/19">19</a></td>
+                            <td id="td-color"><a href="/week/20">20</a></td>
+                            <td><a href="/week/21">21</a></td>
+                            <td id="td-color"><a href="/week/22">22</a></td>
+                            <td><a href="/week/23">23</a></td>
+                            <td id="td-color"><a href="/week/24">24</a></td>
+                            <td><a href="/week/25">25</a></td>
+                            <td id="td-color"><a href="/week/26">26</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/week/27">27</a></td>
+                            <td id="td-color"><a href="/week/28">28</a></td>
+                            <td><a href="/week/29">29</a></td>
+                            <td id="td-color"><a href="/week/30">30</a></td>
+                            <td><a href="/week/31">31</a></td>
+                            <td id="td-color"><a href="/week/32">32</a></td>
+                            <td><a href="/week/33">33</a></td>
+                            <td id="td-color"><a href="/week/34">34</a></td>
+                            <td><a href="/week/35">35</a></td>
+                            <td id="td-color"><a href="/week/36">36</a></td>
+                            <td><a href="/week/37">37</a></td>
+                            <td id="td-color"><a href="/week/38">38</a></td>
+                            <td><a href="/week/39">39</a></td>
+                        </tr>
+                        <tr>
+                            <td id="td-color"><a href="/week/40">40</a></td>
+                            <td><a href="/week/41">41</a></td>
+                            <td id="td-color"><a href="/week/42">42</a></td>
+                            <td><a href="/week/43">43</a></td>
+                            <td id="td-color"><a href="/week/44">44</a></td>
+                            <td><a href="/week/45">45</a></td>
+                            <td id="td-color"><a href="/week/46">46</a></td>
+                            <td><a href="/week/47">47</a></td>
+                            <td id="td-color"><a href="/week/48">48</a></td>
+                            <td><a href="/week/49">49</a></td>
+                            <td id="td-color"><a href="/week/50">50</a></td>
+                            <td><a href="/week/51">51</a></td>
+                            <td id="td-color"><a href="/week/52">52</a></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script src="{{ STATIC_URL }}js/bootstrap-datetimepicker.min.js"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            $('#datetimepicker').datetimepicker({
+            language: 'en',
+            pickTime: false
+            });
+        });
+
+        $(function() {
+            $('#timepicker1').datetimepicker({
+            pickDate: false,
+            pickSeconds: false
+            });
+        });
+
+        $(function() {
+            $('#timepicker2').datetimepicker({
+            pickDate: false,
+            pickSeconds: false
+            });
+        });
+    </script>
 
 {% endblock %}
