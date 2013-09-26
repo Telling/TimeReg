@@ -28,9 +28,11 @@ class TimeRegistration(models.Model):
 class Project(models.Model):
     name = models.CharField(max_length=100)
     project_id = models.IntegerField()
-    manager = models.ForeignKey(User, null=True, blank=True)
+    manager = models.ForeignKey(
+        User, null=True, blank=True, related_name='manager_of_project')
     description = models.CharField(max_length=200, null=True, blank=True)
     is_active = models.BooleanField(default=True)
+    users = models.ManyToManyField(User, related_name='projects')
 
     def __unicode__(self):
         return '{}: {}'.format(unicode(self.project_id), self.name)
