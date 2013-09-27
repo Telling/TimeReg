@@ -36,9 +36,21 @@
 
             <div class="row-fluid">
                 <div class="span11">
-                    <h2 class="tk-atrament-web">Projects adminsitration<i class="icon-edit"></i></h2>
+                    <h2 class="tk-atrament-web">Projects adminsitration<i class="icon-wrench"></i></h2>
                 </div>
             </div>
+
+            {% if messages %}
+            <div class="row-fluid">
+                <div class="span12">
+                    {% for msg in messages %}
+                        <div class="alert alert-success">
+                            {{ msg }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
 
             <div class="span5">
                 <h3 class="muted">Create new project</h3>
@@ -79,6 +91,26 @@
 
             <div class="span5 offset1">
                 <h3 class="muted">Close projects</h3>
+                {% if active_projects %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Project name</th>
+                                <th>Close</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for project in active_projects %}
+                            <tr>
+                                <td>{{ project.name }}</td>
+                                <td style="text-align: center;"><a href="/tools/projects/close_project/{{ project.project_id }}"><i class="icon-ban-circle"></i></a><td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    There's no active projects!
+                {% endif %}
             </div>
         </div>
 {% endblock %}

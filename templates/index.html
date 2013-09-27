@@ -42,6 +42,18 @@
                 </div>
             </div>
 
+            {% if messages %}
+            <div class="row-fluid">
+                <div class="span12">
+                    {% for msg in messages %}
+                        <div class="alert alert-success">
+                            {{ msg }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
             <div class="span11">
                 <h3 class="muted">New Registration</h3>
                 <form class="form-horizontal" id="fix-width" action="/" method="POST">{% csrf_token %}

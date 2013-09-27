@@ -4,7 +4,7 @@ from django.template import RequestContext
 from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Max, Sum
-from TimeRegistration.models import TimeRegistration
+from TimeRegistration.models import TimeRegistration, Project
 from TimeRegistration.forms import TimeRegForm, ProjectRegForm
 from datetime import date
 
@@ -114,6 +114,11 @@ def time_registration(request, year=None, weeknumber=None):
                 timeregistration.week = form.cleaned_data[
                     'date'].isocalendar()[1]
                 timeregistration.save()
+                messages.success(request,
+                                 'Successfully added {} hours on {}'.format(
+                                     timeregistration.hours,
+                                     timeregistration.date)
+                                 )
                 return redirect('/')
         else:
             form = TimeRegForm()
@@ -133,25 +138,43 @@ def tools_users(request):
 def tools_projects(request):
     context = {}
 
+    projects = request.user.projects.all().annotate(
+        total_hours=Sum('timeregistration__hours')).order_by('project_id')
+
     def next_project_id():
         current_id = projects.aggregate(Max('project_id'))['project_id__max']
         if current_id is None:
             return 0
         else:
-            return current_id + 1
+            return current_id
 
     if request.method == "POST":
         form = ProjectRegForm(request.POST)
         if form.is_valid():
             project = form.save(commit=False)
-            project.project_id = next_project_id()
+            project.project_id = next_project_id() + 1
             project.is_active = True
             project.save()
             form.save_m2m()
+            messages.success(request, 'Successfully added project {}'.format(
+                project.name))
             return redirect('/tools/projects/')
     else:
         form = ProjectRegForm()
 
     context['project_form'] = form
+
+    active_projects = Project.objects.filter(
+        is_active=True).order_by('project_id')
+    context['active_projects'] = active_projects
+
     return render_to_response('tools_projects.html',
                               RequestContext(request, context))
+
+
+def close_project(request, project_id):
+    Project.objects.filter(project_id=project_id).update(is_active=False)
+    messages.success(request, 'Successfully closed project #{}'.format(
+        project_id))
+
+    return redirect('/tools/projects/')
