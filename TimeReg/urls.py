@@ -6,7 +6,8 @@ admin.autodiscover()
 urlpatterns = patterns(
     '',
     url(r'^$', 'TimeRegistration.views.time_registration'),
-    url(r'^week/(?P<weeknumber>\d+)',
+    url(r'^(?P<year>\d{4})', 'TimeRegistration.views.time_registration'),
+    url(r'^(?P<year>\d{4})/(?P<weeknumber>\d{2})',
         'TimeRegistration.views.time_registration'),
     url(r'^overview/$', 'TimeRegistration.views.overview'),
     url(r'^projects/$', 'TimeRegistration.views.projects'),

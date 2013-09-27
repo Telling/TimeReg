@@ -59,7 +59,7 @@ def overview(request):
     return render_to_response('overview.html', RequestContext(request))
 
 
-def time_registration(request, weeknumber=None):
+def time_registration(request, year=None, weeknumber=None):
     if request.user.is_authenticated():
         context = {}
 
@@ -67,13 +67,39 @@ def time_registration(request, weeknumber=None):
         context['current_date'] = '{}-{:0>2}-{:0>2}'.format(
             today.year, today.month, today.day)
 
-        if weeknumber is None:
+        if year:
+            context['last_year'] = int(year) - 1
+            context['current_year'] = year
+            context['next_year'] = int(year) + 1
+        else:
+            context['last_year'] = '{}'.format(today.year - 1)
+            context['current_year'] = '{}'.format(today.year)
+            context['next_year'] = '{}'.format(today.year + 1)
+
+        if weeknumber is None and year is None:
             registrations = TimeRegistration.objects.filter(
-                user=request.user, week=date.today().isocalendar()[1]
+                user=request.user,
+                date__year='{0}'.format(today.year),
+                week=date.today().isocalendar()[1]
+            ).order_by('-date')
+        elif weeknumber is None:
+            registrations = TimeRegistration.objects.filter(
+                user=request.user,
+                date__year=year,
+                week=date.today().isocalendar()[1]
+            ).order_by('-date')
+        elif year is None:
+            registrations = TimeRegistration.objects.filter(
+                user=request.user,
+                date__year='{}'.format(today.year),
+                week=weeknumber
             ).order_by('-date')
         else:
             registrations = TimeRegistration.objects.filter(
-                user=request.user, week=weeknumber).order_by('-date')
+                user=request.user,
+                date__year=year,
+                week=weeknumber
+            ).order_by('-date')
 
         context['registrations'] = registrations
 
