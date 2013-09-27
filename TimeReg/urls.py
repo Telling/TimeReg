@@ -8,7 +8,7 @@ urlpatterns = patterns(
     url(r'^$', 'TimeRegistration.views.time_registration'),
     url(r'^week/(?P<weeknumber>\d+)',
         'TimeRegistration.views.time_registration'),
-    url(r'^timereg/$', 'TimeRegistration.views.registration_view'),
+    url(r'^overview/$', 'TimeRegistration.views.overview'),
     url(r'^projects/$', 'TimeRegistration.views.projects'),
     url(r'^account/$', 'TimeRegistration.views.account'),
     url(r'^login/$', 'TimeRegistration.views.login_user'),

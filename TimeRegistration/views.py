@@ -55,8 +55,8 @@ def projects(request):
                               RequestContext(request, context))
 
 
-def registration_view(request):
-    return render_to_response('timeregistration.html', RequestContext(request))
+def overview(request):
+    return render_to_response('overview.html', RequestContext(request))
 
 
 def time_registration(request, weeknumber=None):
