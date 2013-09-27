@@ -79,7 +79,7 @@ def time_registration(request, year=None, weeknumber=None):
         if weeknumber is None and year is None:
             registrations = TimeRegistration.objects.filter(
                 user=request.user,
-                date__year='{0}'.format(today.year),
+                date__year='{}'.format(today.year),
                 week=date.today().isocalendar()[1]
             ).order_by('-date')
         elif weeknumber is None:
