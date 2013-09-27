@@ -76,26 +76,29 @@ def time_registration(request, year=None, weeknumber=None):
             context['current_year'] = '{}'.format(today.year)
             context['next_year'] = '{}'.format(today.year + 1)
 
+        registrations = TimeRegistration.objects.filter(
+            user=request.user).order_by('-date')
+
         if weeknumber:
-            registrations = TimeRegistration.objects.filter(
+            registrations = registrations.filter(
                 user=request.user,
                 date__year='{}'.format(today.year),
                 week=weeknumber
             ).order_by('-date')
         elif year:
-            registrations = TimeRegistration.objects.filter(
+            registrations = registrations.filter(
                 user=request.user,
                 date__year=year,
                 week=date.today().isocalendar()[1]
             ).order_by('-date')
         elif year and weeknumber:
-            registrations = TimeRegistration.objects.filter(
+            registrations = registrations.filter(
                 user=request.user,
                 date__year=year,
                 week=weeknumber
             ).order_by('-date')
         else:
-            registrations = TimeRegistration.objects.filter(
+            registrations = registrations.filter(
                 user=request.user,
                 date__year='{}'.format(today.year),
                 week=date.today().isocalendar()[1]
@@ -135,13 +138,13 @@ def tools_projects(request):
         if current_id is None:
             return 0
         else:
-            return current_id
+            return current_id + 1
 
     if request.method == "POST":
         form = ProjectRegForm(request.POST)
         if form.is_valid():
             project = form.save(commit=False)
-            project.project_id = next_project_id() + 1
+            project.project_id = next_project_id()
             project.is_active = True
             project.save()
             form.save_m2m()
