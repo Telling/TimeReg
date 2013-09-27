@@ -76,29 +76,29 @@ def time_registration(request, year=None, weeknumber=None):
             context['current_year'] = '{}'.format(today.year)
             context['next_year'] = '{}'.format(today.year + 1)
 
-        if weeknumber is None and year is None:
+        if weeknumber:
             registrations = TimeRegistration.objects.filter(
                 user=request.user,
                 date__year='{}'.format(today.year),
-                week=date.today().isocalendar()[1]
+                week=weeknumber
             ).order_by('-date')
-        elif weeknumber is None:
+        elif year:
             registrations = TimeRegistration.objects.filter(
                 user=request.user,
                 date__year=year,
                 week=date.today().isocalendar()[1]
             ).order_by('-date')
-        elif year is None:
+        elif year and weeknumber:
             registrations = TimeRegistration.objects.filter(
                 user=request.user,
-                date__year='{}'.format(today.year),
+                date__year=year,
                 week=weeknumber
             ).order_by('-date')
         else:
             registrations = TimeRegistration.objects.filter(
                 user=request.user,
-                date__year=year,
-                week=weeknumber
+                date__year='{}'.format(today.year),
+                week=date.today().isocalendar()[1]
             ).order_by('-date')
 
         context['registrations'] = registrations
