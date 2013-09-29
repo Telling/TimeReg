@@ -5,7 +5,7 @@ from TimeRegistration.models import TimeRegistration, Project
 class TimeRegForm(forms.ModelForm):
     project = forms.ModelChoiceField(
         queryset=Project.objects.filter(is_active=True),
-        label='Projekt'
+        label='Project'
     )
 
     class Meta:
