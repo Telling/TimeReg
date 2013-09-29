@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block head %}
-
     <style>
         #overviewNav {
             color: #555;
@@ -12,12 +11,28 @@
             box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
             }
     </style>
-
 {% endblock %}
 
 {% block content %}
+    <div class="row-fluid">
+        <div class="span12 well">
 
+            <div class="row-fluid">
+                <div class="span11">
+                    <h2 class="tk-atrament-web">Overview</h2>
+                </div>
+            </div>
 
+            <div class="span5">
+                <h3 class="muted">Quicklook</h3>
+            </div>
+
+            <div class="span5 offset1">
+                <h3 class="muted">Export</h3>
+            </div>
+
+        </div>
+    </div>
 {% endblock %}
 
 {% block scripts %}
