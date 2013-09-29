@@ -85,24 +85,30 @@ def time_registration(request, year=None, weeknumber=None):
                 date__year='{}'.format(today.year),
                 week=weeknumber
             ).order_by('-date')
+            context['weeknumber'] = weeknumber
         elif year:
+            weeknumber = date.today().isocalendar()[1]
             registrations = registrations.filter(
                 user=request.user,
                 date__year=year,
-                week=date.today().isocalendar()[1]
+                week=weeknumber
             ).order_by('-date')
+            context['weeknumber'] = weeknumber
         elif year and weeknumber:
             registrations = registrations.filter(
                 user=request.user,
                 date__year=year,
                 week=weeknumber
             ).order_by('-date')
+            context['weeknumber'] = weeknumber
         else:
+            weeknumber = date.today().isocalendar()[1]
             registrations = registrations.filter(
                 user=request.user,
                 date__year='{}'.format(today.year),
-                week=date.today().isocalendar()[1]
+                week=weeknumber
             ).order_by('-date')
+            context['weeknumber'] = weeknumber
 
         context['registrations'] = registrations
 
@@ -117,8 +123,8 @@ def time_registration(request, year=None, weeknumber=None):
                 messages.success(request,
                                  'Successfully added {} hours on {}'.format(
                                      timeregistration.hours,
-                                     timeregistration.date)
-                                 )
+                                     timeregistration.date
+                                 ))
                 return redirect('/')
         else:
             form = TimeRegForm()
