@@ -135,7 +135,7 @@
                         </tbody>
                     </table>
                 {% else %}
-                    You've got no registrations.
+                    You've got no registrations in this period.
                 {% endif %}
             </div>
 
@@ -206,7 +206,7 @@
                     </tbody>
                 </table>
                 <div class="text-center">
-                    <a href="/{{ last_year }}/"><i class="icon-chevron-left"></i></a> <a href="/{{ current_year }}/">{{ current_year }}</a> <a href="/{{ next_year }}/"><i class="icon-chevron-right"></i></a>
+                    <a href="/{{ last_year }}/"><i class="icon-arrow-left"></i></a> {{ current_year }} <a href="/{{ next_year }}/"><i class="icon-arrow-right"></i></a>
                 </div>
             </div>
         </div>

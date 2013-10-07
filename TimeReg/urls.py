@@ -11,7 +11,6 @@ urlpatterns = patterns(
     url(r'^(?P<year>\d{4})', 'TimeRegistration.views.time_registration'),
     url(r'^overview/$', 'TimeRegistration.views.overview'),
     url(r'^projects/$', 'TimeRegistration.views.projects'),
-    url(r'^account/$', 'TimeRegistration.views.account'),
     url(r'^login/$', 'TimeRegistration.views.login_user'),
     url(r'^tools/users/$', 'TimeRegistration.views.tools_users'),
     url(r'^tools/projects/$', 'TimeRegistration.views.tools_projects'),

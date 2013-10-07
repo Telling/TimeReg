@@ -18,3 +18,21 @@ class ProjectRegForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ('name', 'manager', 'description', 'users')
+
+
+class OverviewPDFForm(forms.Form):
+    start_date = forms.DateField()
+    end_date = forms.DateField()
+    project = forms.ModelChoiceField(
+        queryset=Project.objects.filter(),
+        label='Project'
+    )
+
+
+class QuicklookForm(forms.Form):
+    quick_start_date = forms.DateField()
+    quick_end_date = forms.DateField()
+    quick_project = forms.ModelChoiceField(
+        queryset=Project.objects.filter(),
+        label='Project'
+    )
