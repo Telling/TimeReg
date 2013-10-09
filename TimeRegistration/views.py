@@ -87,6 +87,8 @@ def create_pdf(user, project, start_date, end_date):
         pdf.line(100, pdf_line, 525, pdf_line)
         pdf_text -= 20
         pdf_line = pdf_text - 5
+        if i > 0 and len(registrations) > 31:
+            pdf.showPage()
 
     pdf.setDash()
     pdf.drawString(420, 85, 'Total:')
@@ -209,6 +211,7 @@ def time_registration(request, year=None, weeknumber=None):
                 timeregistration.user = request.user
                 timeregistration.week = form.cleaned_data[
                     'date'].isocalendar()[1]
+                timeregistration.project = form.cleaned_data['project']
                 timeregistration.save()
                 messages.success(request,
                                  'Successfully added {} hours on {}'.format(
