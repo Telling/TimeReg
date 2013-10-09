@@ -87,8 +87,12 @@ def create_pdf(user, project, start_date, end_date):
         pdf.line(100, pdf_line, 525, pdf_line)
         pdf_text -= 20
         pdf_line = pdf_text - 5
-        if i > 0 and len(registrations) > 31:
+        if i != 0 and i % 31 == 0:
             pdf.showPage()
+            pdf.setFont('Helvetica', 10)
+            pdf.setDash(1, 2)
+            pdf_text = 725
+            pdf_line = 720
 
     pdf.setDash()
     pdf.drawString(420, 85, 'Total:')
