@@ -130,10 +130,13 @@ def overview(request):
                 project=quicklook_form.cleaned_data['quick_project'],
                 date__range=['{}'.format(start_date), '{}'.format(end_date)]
             ).order_by('date')
+
             if not registrations:
                 context['empty_registrations'] = True
             else:
                 context['registrations'] = registrations
+                hour_sum = registrations.aggregate(Sum('hours'))
+                context['total_hours'] = hour_sum['hours__sum']
     else:
         quicklook_form = QuicklookForm()
 
