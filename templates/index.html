@@ -122,6 +122,7 @@
                                 <th>Date</th>
                                 <th>Hours</th>
                                 <th>Project</th>
+                                <th>Remove</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -130,6 +131,7 @@
                                 <td style="text-align: left !important;">{{ registration.date }}</td>
                                 <td style="text-align: left !important;">{{ registration.hours }}</td>
                                 <td style="text-align: left !important;">{{ registration.project.name }}</td>
+                                <td style="text-align: center;"><a href="/remove_registration/{{ registration.id }}"><i class="icon-trash"></i></a><td>
                             </tr>
                         {% endfor %}
                         </tbody>

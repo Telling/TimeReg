@@ -60,9 +60,7 @@
                         <div class="controls" id="fix-controls">
                             {{ quicklook_form.quick_project }}
                         </div>
-                    </div>
 
-                    <div class="control-group">
                         <div class="controls" id="fix-controls">
                             <button type="submit" class="btn btn-success" name="quicklook">Quicklook</button>
                         </div>
@@ -97,9 +95,7 @@
                         <div class="controls" id="fix-controls">
                             {{ pdf_form.project }}
                         </div>
-                    </div>
 
-                    <div class="control-group">
                         <div class="controls" id="fix-controls">
                             <button type="submit" class="btn btn-success" name="export">Export PDF</button>
                         </div>
@@ -108,30 +104,32 @@
             </div>
 
             {% if empty_registrations %}
-                <div class="span11">
+                <div class="span8">
                     <h3>No registrations from {{ start_date }} to {{ end_date }}.</h3>
                 </div>
             {% elif registrations %}
                 <div class="span11">
                     <h3 class="muted">Registrations from <i>{{ start_date }} to {{ end_date }}</i></h3>
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Hours</th>
-                                    <th>Project</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {% for registration in registrations %}
-                                <tr>
-                                    <td style="text-align: left !important;">{{ registration.date }}</td>
-                                    <td style="text-align: left !important;">{{ registration.hours }}</td>
-                                    <td style="text-align: left !important;">{{ registration.project.name }}</td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                </div>
+                <div class="span4">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Hours</th>
+                                <th>Project</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for registration in registrations %}
+                            <tr>
+                                <td style="text-align: left !important;">{{ registration.date }}</td>
+                                <td style="text-align: left !important;">{{ registration.hours }}</td>
+                                <td style="text-align: left !important;">{{ registration.project.name }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
                 <div class="span11">
                     <h3 class="muted">Total: {{ total_hours }}</h3>

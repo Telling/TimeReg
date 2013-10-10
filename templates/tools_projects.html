@@ -52,65 +52,91 @@
             </div>
             {% endif %}
 
-            <div class="span5">
-                <h3 class="muted">Create new project</h3>
-                <form class="form-horizontal" action="" method="POST">{% csrf_token %}
-                    <div class="control-group">
-                        <label class="control-label" id="fix-control-label" for="inputName">Name</label>
-                        <div class="controls" id="fix-controls">
-                            <input type="text" id="inputName" placeholder="Name" name="name" required>
+            <div class="span11">
+                <div class="span5">
+                    <h3 class="muted">Create new project</h3>
+                    <form class="form-horizontal" action="" method="POST">{% csrf_token %}
+                        <div class="control-group">
+                            <label class="control-label" id="fix-control-label" for="inputName">Name</label>
+                            <div class="controls" id="fix-controls">
+                                <input type="text" id="inputName" placeholder="Name" name="name" required>
+                            </div>
                         </div>
-                    </div>
-                    <div class="control-group">
-                        {{ project_form.manager.errors }}
-                        <label class="control-label" id="fix-control-label" for="inputManager">Manager</label>
-                        <div class="controls" id="fix-controls">
-                            {{ project_form.manager }}
+                        <div class="control-group">
+                            {{ project_form.manager.errors }}
+                            <label class="control-label" id="fix-control-label" for="inputManager">Manager</label>
+                            <div class="controls" id="fix-controls">
+                                {{ project_form.manager }}
+                            </div>
                         </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" id="fix-control-label" for="inputDesc">Description</label>
-                        <div class="controls" id="fix-controls">
-                            <input type="text" id="inputDesc" maxlength="200" placeholder="Description" name="description">
+                        <div class="control-group">
+                            <label class="control-label" id="fix-control-label" for="inputDesc">Description</label>
+                            <div class="controls" id="fix-controls">
+                                <input type="text" id="inputDesc" maxlength="200" placeholder="Description" name="description">
+                            </div>
                         </div>
-                    </div>
-                    <div class="control-group">
-                        {{ project_form.users.errors }}
-                        <label class="control-label" id="fix-control-label" for="inputUsers">Members</label>
-                        <div class="controls" id="fix-controls">
-                            {{ project_form.users }}
+                        <div class="control-group">
+                            {{ project_form.users.errors }}
+                            <label class="control-label" id="fix-control-label" for="inputUsers">Members</label>
+                            <div class="controls" id="fix-controls">
+                                {{ project_form.users }}
+                            </div>
+                            <div class="controls" id="fix-controls">
+                                <button type="submit" class="btn btn-success">Add project</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="controls" id="fix-controls">
-                            <button type="submit" class="btn btn-success">Add project</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
+
+                <div class="span5 offset1">
+                    <h3 class="muted">Close projects</h3>
+                    {% if active_projects %}
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Project name</th>
+                                    <th>Close</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for project in active_projects %}
+                                <tr>
+                                    <td>{{ project.name }}</td>
+                                    <td style="text-align: center;"><a href="/tools/projects/close_project/{{ project.project_id }}"><i class="icon-lock"></i></a><td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        There's no active projects!
+                    {% endif %}
+                </div>
             </div>
 
-            <div class="span5 offset1">
-                <h3 class="muted">Close projects</h3>
-                {% if active_projects %}
-                    <table class="table table-condensed">
-                        <thead>
-                            <tr>
-                                <th>Project name</th>
-                                <th>Close</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for project in active_projects %}
-                            <tr>
-                                <td>{{ project.name }}</td>
-                                <td style="text-align: center;"><a href="/tools/projects/close_project/{{ project.project_id }}"><i class="icon-ban-circle"></i></a><td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% else %}
-                    There's no active projects!
-                {% endif %}
-            </div>
+            {% if closed_projects %}
+                <div class="span11">
+                    <div class="span5">
+                        <h3 class="muted">Reopen project</h3>
+                            <form class="form-horizontal" action="/tools/projects/open_project/" method="GET">
+                                <div class="control-group">
+                                    <label class="control-label" id="fix-control-label" for="inputProject">Project</label>
+                                    <div class="controls" id="fix-controls">
+                                        <select>
+                                            {% for project in closed_projects %}
+                                                <option value="{{ project.project_id }}">{{ project.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="control-group">
+                                        <div class="controls" id="fix-controls">
+                                            <button type="submit" class="btn btn-success">Reopen</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
 {% endblock %}
