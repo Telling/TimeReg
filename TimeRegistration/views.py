@@ -244,8 +244,7 @@ def tools_users(request):
 def tools_projects(request):
     context = {}
 
-    projects = request.user.projects.all().annotate(
-        total_hours=Sum('timeregistration__hours')).order_by('project_id')
+    projects = Project.objects.filter().order_by('project_id')
 
     def next_project_id():
         current_id = projects.aggregate(Max('project_id'))['project_id__max']
@@ -270,9 +269,11 @@ def tools_projects(request):
 
     context['project_form'] = form
 
-    active_projects = Project.objects.filter(
-        is_active=True).order_by('project_id')
+    active_projects = projects.filter(is_active=True).order_by('project_id')
     context['active_projects'] = active_projects
+
+    closed_projects = projects.filter(is_active=False).order_by('project_id')
+    context['closed_projects'] = closed_projects
 
     return render_to_response('tools_projects.html',
                               RequestContext(request, context))
@@ -284,3 +285,19 @@ def close_project(request, project_id):
         project_id))
 
     return redirect('/tools/projects/')
+
+
+def open_project(request):
+    project_id = request.GET['project']
+    project = Project.objects.filter(project_id=project_id).update(is_active=True)
+    messages.success(request, 'Successfully reopened project #{}'.format(
+        project_id))
+
+    return redirect('/tools/projects/')
+
+
+def remove_registration(request, timereg_id):
+    TimeRegistration.objects.filter(id=timereg_id).delete()
+    messages.success(request, 'Successfully removed registration')
+
+    return redirect('/')

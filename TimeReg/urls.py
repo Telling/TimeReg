@@ -6,6 +6,8 @@ admin.autodiscover()
 urlpatterns = patterns(
     '',
     url(r'^$', 'TimeRegistration.views.time_registration'),
+    url(r'^remove_registration/(?P<timereg_id>\d+)',
+        'TimeRegistration.views.remove_registration'),
     url(r'^(?P<year>\d{4})/(?P<weeknumber>\d{2})',
         'TimeRegistration.views.time_registration'),
     url(r'^(?P<year>\d{4})', 'TimeRegistration.views.time_registration'),
@@ -16,6 +18,8 @@ urlpatterns = patterns(
     url(r'^tools/projects/$', 'TimeRegistration.views.tools_projects'),
     url(r'^tools/projects/close_project/(?P<project_id>\d+)',
         'TimeRegistration.views.close_project'),
+    url(r'^tools/projects/open_project/$',
+        'TimeRegistration.views.open_project', name='project'),
     url(r'^logout/$', 'TimeRegistration.views.logout_user'),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),

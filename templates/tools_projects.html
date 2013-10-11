@@ -121,7 +121,7 @@
                                 <div class="control-group">
                                     <label class="control-label" id="fix-control-label" for="inputProject">Project</label>
                                     <div class="controls" id="fix-controls">
-                                        <select>
+                                        <select name="project" required>
                                             {% for project in closed_projects %}
                                                 <option value="{{ project.project_id }}">{{ project.name }}</option>
                                             {% endfor %}
