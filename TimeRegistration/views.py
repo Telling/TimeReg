@@ -40,19 +40,22 @@ def logout_user(request):
 
 
 def projects(request):
-    context = {}
+    if request.user.is_authenticated():
+        context = {}
 
-    projects = request.user.projects.all().annotate(
-        total_hours=Sum('timeregistration__hours')).order_by('project_id')
+        projects = request.user.projects.all().annotate(
+            total_hours=Sum('timeregistration__hours')).order_by('project_id')
 
-    open_projects = projects.filter(is_active=True)
-    context['open_projects'] = open_projects
+        open_projects = projects.filter(is_active=True)
+        context['open_projects'] = open_projects
 
-    closed_projects = projects.filter(is_active=False)
-    context['closed_projects'] = closed_projects
+        closed_projects = projects.filter(is_active=False)
+        context['closed_projects'] = closed_projects
 
-    return render_to_response('projects.html',
-                              RequestContext(request, context))
+        return render_to_response('projects.html',
+                                  RequestContext(request, context))
+    else:
+        return render_to_response('index.html', RequestContext(request))
 
 
 def create_pdf(user, project, start_date, end_date):
@@ -148,6 +151,7 @@ def overview(request):
             project = pdf_form.cleaned_data['project']
             start_date = pdf_form.cleaned_data['start_date']
             end_date = pdf_form.cleaned_data['end_date']
+
             return create_pdf(user, project, start_date, end_date)
     else:
         pdf_form = OverviewPDFForm()
@@ -289,7 +293,7 @@ def close_project(request, project_id):
 
 def open_project(request):
     project_id = request.GET['project']
-    project = Project.objects.filter(project_id=project_id).update(is_active=True)
+    Project.objects.filter(project_id=project_id).update(is_active=True)
     messages.success(request, 'Successfully reopened project #{}'.format(
         project_id))
 
