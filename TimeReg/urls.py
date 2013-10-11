@@ -24,6 +24,8 @@ urlpatterns = patterns(
         name='user'),
     url(r'^tools/users/reenable/$', 'TimeRegistration.views.reenable_user',
         name='user'),
+    url(r'^tools/users/make_admin/$', 'TimeRegistration.views.do_undo_admin',
+        name='user'),
     url(r'^logout/$', 'TimeRegistration.views.logout_user'),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),

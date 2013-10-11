@@ -7,7 +7,6 @@ class Profile(models.Model):
     employee_id = models.IntegerField(null=True, blank=True)
     department = models.CharField(max_length=100, null=True, blank=True)
     employment_date = models.DateField(null=True, blank=True)
-    is_active = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.user.username

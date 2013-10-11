@@ -273,8 +273,9 @@ def tools_users(request):
 
     context['profile_form'] = profile_form
 
-    context['active_users'] = Profile.objects.filter(is_active=True)
-    context['disabled_users'] = Profile.objects.filter(is_active=False)
+    context['active_users'] = Profile.objects.filter(user__is_active=True)
+    context['disabled_users'] = Profile.objects.filter(user__is_active=False)
+    context['users'] = Profile.objects.filter(user__is_active=True)
 
     return render_to_response('tools_users.html',
                               RequestContext(request, context))
@@ -282,7 +283,9 @@ def tools_users(request):
 
 def disable_user(request):
     username = request.GET['user']
-    Profile.objects.filter(user__username=username).update(is_active=False)
+    user = User.objects.get(username=username)
+    user.is_active = False
+    user.save()
     messages.success(request, 'Successfully disabled user {}'.format(
         username))
 
@@ -291,10 +294,32 @@ def disable_user(request):
 
 def reenable_user(request):
     username = request.GET['user']
-    Profile.objects.filter(user__username=username).update(is_active=True)
+    user = User.objects.get(username=username)
+    user.is_active = True
+    user.save()
     messages.success(request, 'Successfully re-enabled user {}'.format(
         username))
     return redirect('/tools/users')
+
+
+def do_undo_admin(request):
+    username = request.GET['user']
+    user = User.objects.get(username=username)
+
+    if 'do' in request.GET:
+        user.is_superuser = True
+        messages.success(request, 'Successfully made {} administrator'.format(
+            username))
+    elif 'undo' in request.GET:
+        user.is_superuser = False
+        messages.success(request,
+                         'Successfully removed {} as administrator'.format(
+                         username)
+                         )
+
+    user.save()
+
+    return redirect('/tools/users/')
 
 
 def tools_projects(request):

@@ -154,6 +154,30 @@
                     </form>
                 </div>
                 {% endif %}
+
+                {% if users %}
+                <div class="span5 offset1">
+                    <h3 class="muted">Administrators</h3>
+                    <form class="form-horizontal" action="/tools/users/make_admin/" method="GET">
+                        <div class="control-group">
+                            <label class="control-label" id="fix-control-label" for="inputUser">Username</label>
+                            <div class="controls" id="fix-controls">
+                                <select name="user" required>
+                                    {% for profile in users %}
+                                        <option value="{{ profile.user.username }}">{{ profile.user.username }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls" id="fix-controls">
+                                    <button type="submit" name="do" class="btn btn-danger">Do</button>
+                                    <button type="submit" name="undo" class="btn btn-danger">Undo</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
             </div>
         </div>
 {% endblock %}
