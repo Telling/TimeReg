@@ -31,48 +31,55 @@
                 </div>
             </div>
 
-            {% if open_projects or closed_projects %}
-            <div class="span5">
-                <h3 class="muted">Open projects</h3>
-                <table class="table table-striped">
-                    <thead>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Hours</th>
-                    </thead>
-                    {% for project in open_projects %}
-                        <tr>
-                            <td>{{ project.project_id }}</td>
-                            <td>{{ project.name }}</td>
-                            <td>{{ project.total_hours }}</td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>
-
-            <div class="span5 offset1">
-                <h3 class="muted">Closed projects</h3>
-                <table class="table table-striped">
-                    <thead>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Hours</th>
-                    </thead>
-                    {% for project in closed_projects %}
-                        <tr>
-                            <td>{{ project.project_id }}</td>
-                            <td>{{ project.name }}</td>
-                            <td>{{ project.total_hours }}</td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>
-            {% else %}
             <div class="span11">
-                <h3 class="muted">No projects created.</h3>
-            </div>
-            {% endif %}
+                {% if open_projects %}
+                    <div class="span5">
+                        <h3 class="muted">Open projects</h3>
+                        <table class="table table-striped">
+                            <thead>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Hours</th>
+                            </thead>
+                            {% for project in open_projects %}
+                                <tr>
+                                    <td>{{ project.project_id }}</td>
+                                    <td>{{ project.name }}</td>
+                                    <td>{{ project.total_hours }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="span5">
+                        <h3 class="muted">No open projects.</h3>
+                    </div>
+                {% endif %}
 
+                {% if closed_projects %}
+                    <div class="span5 offset1">
+                        <h3 class="muted">Closed projects</h3>
+                        <table class="table table-striped">
+                            <thead>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Hours</th>
+                            </thead>
+                            {% for project in closed_projects %}
+                                <tr>
+                                    <td>{{ project.project_id }}</td>
+                                    <td>{{ project.name }}</td>
+                                    <td>{{ project.total_hours }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="span5">
+                        <h3 class="muted">No closed projects.</h3>
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 {% endblock %}

@@ -4,9 +4,10 @@ from django.contrib.auth.models import User
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
-    employee_id = models.IntegerField()
-    department = models.CharField(max_length=100)
-    employment_date = models.DateField()
+    employee_id = models.IntegerField(null=True, blank=True)
+    department = models.CharField(max_length=100, null=True, blank=True)
+    employment_date = models.DateField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.user.username

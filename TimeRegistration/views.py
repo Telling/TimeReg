@@ -5,8 +5,9 @@ from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Max, Sum
 from django.http import HttpResponse
-from TimeRegistration.models import TimeRegistration, Project
-from TimeRegistration.forms import TimeRegForm, ProjectRegForm
+from django.contrib.auth.models import User
+from TimeRegistration.models import TimeRegistration, Project, Profile
+from TimeRegistration.forms import TimeRegForm, ProjectRegForm, ProfileForm
 from TimeRegistration.forms import OverviewPDFForm, QuicklookForm
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
@@ -242,7 +243,58 @@ def time_registration(request, year=None, weeknumber=None):
 
 
 def tools_users(request):
-    return render_to_response('tools_users.html', RequestContext(request))
+    context = {}
+
+    if request.method == 'POST':
+        profile_form = ProfileForm(request.POST)
+        if profile_form.is_valid():
+            username = profile_form.cleaned_data['username']
+            email = profile_form.cleaned_data['email']
+            password = profile_form.cleaned_data['password']
+
+            # Create user object
+            user = User.objects.create_user('{}'.format(username),
+                                            '{}'.format(email),
+                                            '{}'.format(password)
+                                            )
+
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.employee_id = profile_form.cleaned_data['employee_id']
+            profile.department = profile_form.cleaned_data['department']
+            profile.employment_date = profile_form.cleaned_data[
+                'employment_date']
+            profile.save()
+            messages.success(
+                request, 'Successfully added user {}'.format(username))
+            return redirect('/tools/users/')
+    else:
+        profile_form = ProfileForm()
+
+    context['profile_form'] = profile_form
+
+    context['active_users'] = Profile.objects.filter(is_active=True)
+    context['disabled_users'] = Profile.objects.filter(is_active=False)
+
+    return render_to_response('tools_users.html',
+                              RequestContext(request, context))
+
+
+def disable_user(request):
+    username = request.GET['user']
+    Profile.objects.filter(user__username=username).update(is_active=False)
+    messages.success(request, 'Successfully disabled user {}'.format(
+        username))
+
+    return redirect('/tools/users/')
+
+
+def reenable_user(request):
+    username = request.GET['user']
+    Profile.objects.filter(user__username=username).update(is_active=True)
+    messages.success(request, 'Successfully re-enabled user {}'.format(
+        username))
+    return redirect('/tools/users')
 
 
 def tools_projects(request):
@@ -257,7 +309,7 @@ def tools_projects(request):
         else:
             return current_id
 
-    if request.method == "POST":
+    if request.method == 'POST':
         form = ProjectRegForm(request.POST)
         if form.is_valid():
             project = form.save(commit=False)

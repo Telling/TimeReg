@@ -1,5 +1,5 @@
 from django import forms
-from TimeRegistration.models import TimeRegistration, Project
+from TimeRegistration.models import TimeRegistration, Project, Profile
 
 
 class TimeRegForm(forms.ModelForm):
@@ -36,3 +36,13 @@ class QuicklookForm(forms.Form):
         queryset=Project.objects.filter(),
         label='Project'
     )
+
+
+class ProfileForm(forms.ModelForm):
+    username = forms.CharField()
+    email = forms.CharField()
+    password = forms.CharField()
+
+    class Meta:
+        model = Profile
+        fields = ('employee_id', 'department', 'employment_date')
