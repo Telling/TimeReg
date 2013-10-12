@@ -275,7 +275,8 @@ def tools_users(request):
 
     context['active_users'] = Profile.objects.filter(user__is_active=True)
     context['disabled_users'] = Profile.objects.filter(user__is_active=False)
-    context['users'] = Profile.objects.filter(user__is_active=True)
+    context['users'] = Profile.objects.filter(user__is_active=True,
+                                              user__is_superuser=False)
 
     return render_to_response('tools_users.html',
                               RequestContext(request, context))
