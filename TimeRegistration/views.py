@@ -26,7 +26,7 @@ def login_user(request):
                 login(request, user)
                 return redirect('/')
             else:
-                messages.warning(request, 'Inactive account.')
+                messages.warning(request, 'Disabled account.')
         else:
             messages.warning(
                 request, 'Your username and/or password were incorrect.')
@@ -275,8 +275,7 @@ def tools_users(request):
 
     context['active_users'] = Profile.objects.filter(user__is_active=True)
     context['disabled_users'] = Profile.objects.filter(user__is_active=False)
-    context['users'] = Profile.objects.filter(user__is_active=True,
-                                              user__is_superuser=False)
+    context['users'] = Profile.objects.filter(user__is_active=True)
 
     return render_to_response('tools_users.html',
                               RequestContext(request, context))
