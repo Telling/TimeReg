@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet" media="screen">
         <link href="{{ STATIC_URL }}css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+        <link rel="icon" type="image/x-icon" href="{{ STATIC_URL }}img/favicon.ico" />
 
         <style type="text/css">
             body {
@@ -102,7 +103,7 @@
                                         {% endif %}
                                     </ul>
                                     <ul class="nav pull-right">
-                                        <li><a href="#">{{ user.username }}</a></li>
+                                        <li><a href="/profile/">{{ user.username }}</a></li>
                                         <li class="divider-vertical"></li>
                                         <li><a href="/logout/" id="logout-btn">Logout</a></li>
                                     </ul>
