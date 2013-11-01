@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <style>
+        #desc {
+            font-size: 22px;
+        }
+
+        dt {
+            height: 40px;
+        }
+
+        dd {
+            height: 40px;
+        }
+
+        #fix-control-label {
+            width: 65px;
+        }
+
+        #fix-controls {
+            margin-left: 75px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="row-fluid">
+        <div class="span12 well">
+
+            <div class="row-fluid">
+                <div class="span11">
+                    <h2 class="tk-atrament-web">Profile</h2>
+                </div>
+            </div>
+
+            {% if messages %}
+            <div class="row-fluid">
+                <div class="span12">
+                    {% for msg in messages %}
+                        <div class="alert alert-success">
+                            {{ msg }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="span11">
+                <div class="span6">
+                    <h3 class="muted">Information</h3>
+                    <dl class="dl-horizontal" id="desc">
+                        <dt>Username</dt>
+                        <dd>{{ username }}</dd>
+                        <dt>First name</dt>
+                        <dd>{{ firstname }}</dd>
+                        <dt>Last name</dt>
+                        <dd>{{ lastname }}</dd>
+                        <dt>E-mail</dt>
+                        <dd>{{ email }}</dd>
+                    </dl>
+                </div>
+
+                <div class="span5" offset1>
+                    <h3 class="muted">Import ics</h3>
+                    <blockquote>
+                        <p>
+                            When importing an ics file, TimeReg will create a
+                            project based on the ics file name, unless you choose
+                            to import into an already existing project.
+                        </p>
+                    </blockquote>
+                    <form class="form-horizontal" enctype="multipart/form-data" action="" method="POST">{% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-success">Import</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="span11">
+                <div class="span5">
+                    <h3 class="muted">Change password</h3>
+                    <form class="form-horizontal" action="" method="POST">{% csrf_token %}
+                        <div class="control-group">
+                            <label class="control-label" id="fix-control-label" for="inputPassword">Password</label>
+                            <div class="controls" id="fix-controls">
+                                <input type="text" id="inputPassword" placeholder="Password" name="password" required>
+                            </div>
+                            <div class="controls" id="fix-controls">
+                                <button type="submit" class="btn btn-success">Change password</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}
