@@ -41,8 +41,19 @@ class QuicklookForm(forms.Form):
 class ProfileForm(forms.ModelForm):
     username = forms.CharField()
     email = forms.CharField()
+    first_name = forms.CharField()
+    last_name = forms.CharField()
     password = forms.CharField()
 
     class Meta:
         model = Profile
         fields = ('employee_id', 'department', 'employment_date')
+
+
+class UploadIcsForm(forms.Form):
+    ics_file = forms.FileField()
+    projects = forms.ModelChoiceField(
+        queryset=Project.objects.filter(),
+        required=False,
+        label='Projects'
+    )

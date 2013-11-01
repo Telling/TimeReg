@@ -1,6 +1,7 @@
 from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.template import RequestContext
+from django.core.exceptions import ValidationError
 from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Max, Sum
@@ -9,9 +10,11 @@ from django.contrib.auth.models import User
 from TimeRegistration.models import TimeRegistration, Project, Profile
 from TimeRegistration.forms import TimeRegForm, ProjectRegForm, ProfileForm
 from TimeRegistration.forms import OverviewPDFForm, QuicklookForm
+from TimeRegistration.forms import UploadIcsForm
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from datetime import date
+from icalendar import Calendar
 
 
 def login_user(request):
@@ -251,11 +254,15 @@ def tools_users(request):
             username = profile_form.cleaned_data['username']
             email = profile_form.cleaned_data['email']
             password = profile_form.cleaned_data['password']
+            firstname = profile_form.cleaned_data['first_name']
+            lastname = profile_form.cleaned_data['last_name']
 
             # Create user object
-            user = User.objects.create_user('{}'.format(username),
-                                            '{}'.format(email),
-                                            '{}'.format(password)
+            user = User.objects.create_user(username=username,
+                                            first_name=firstname,
+                                            last_name=lastname,
+                                            email=email,
+                                            password=password
                                             )
 
             profile = profile_form.save(commit=False)
@@ -382,3 +389,82 @@ def remove_registration(request, timereg_id):
     messages.success(request, 'Successfully removed registration')
 
     return redirect('/')
+
+
+def parse_ics(ics_file, project, user):
+    if project is None:
+        projects = Project.objects.filter().order_by('project_id')
+
+        def next_project_id():
+            current_id = projects.aggregate(Max(
+                'project_id'))['project_id__max']
+            if current_id is None:
+                return 0
+            else:
+                return current_id
+
+        project_name = ics_file.name.split('.')
+        project = Project.objects.create(name="{}".format(project_name[0]),
+                                         project_id=next_project_id() + 1)
+        project.users.add(user)
+        project.save()
+    else:
+        project = project
+
+    # Try parsing the ics file. Will only parse events which arent all-day.
+    try:
+        cal = Calendar.from_ical(ics_file.read())
+        for entry in cal.walk():
+            if entry.name == 'VEVENT':
+                start = entry.get('dtstart').dt
+                end = entry.get('dtend').dt
+                tdelta = end - start
+                registration = TimeRegistration.objects.create(
+                    user=user,
+                    date=start,
+                    week=start.isocalendar()[1],
+                    start_time=start.time(),
+                    end_time=end.time(),
+                    hours=(tdelta.total_seconds() / 60.0) / 60.0,
+                    project=project
+                )
+                registration.save()
+    except AttributeError as e:
+        print e
+
+
+def show_profile(request):
+    context = {}
+    user = request.user
+
+    context['username'] = user.username
+    context['firstname'] = user.first_name
+    context['lastname'] = user.last_name
+    context['email'] = user.email
+
+    if request.method == 'POST':
+        if 'password' in request:
+            user = User.objects.get(username=user.username)
+            user.set_password(request.POST['password'])
+            user.save()
+            messages.success(request, 'Successfully changed password.')
+
+        form = UploadIcsForm(request.POST, request.FILES)
+        if form.is_valid():
+            ics_file = request.FILES['ics_file']
+            project = form.cleaned_data['projects']
+
+            try:
+                parse_ics(ics_file, project, user)
+            except ValueError:
+                raise ValidationError('Not an ics file.')
+
+            messages.success(request, 'Successfully imported registrations.')
+            return redirect('/profile/')
+
+    else:
+        form = UploadIcsForm()
+
+    context['form'] = form
+
+    return render_to_response('profile.html', RequestContext(request, context))
