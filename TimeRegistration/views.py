@@ -321,7 +321,7 @@ def do_undo_admin(request):
         user.is_superuser = False
         messages.success(request,
                          'Successfully removed {} as administrator'.format(
-                         username)
+                             username)
                          )
 
     user.save()
