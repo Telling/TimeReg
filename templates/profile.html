@@ -71,8 +71,23 @@
                         </p>
                     </blockquote>
                     <form class="form-horizontal" enctype="multipart/form-data" action="" method="POST">{% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit" class="btn btn-success">Import</button>
+                        <div class="control-group">
+                            <label class="control-label" id="fix-control-label" for="inputFile">File</label>
+                            <div class="controls" id="fix-controls">
+                                <input type="file" name="ics_file" required>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            {{ quicklook_form.quick_project.errors }}
+                            <label class="control-label" id="fix-control-label" for="inputProject">Project</label>
+                            <div class="controls" id="fix-controls">
+                                {{ form.projects }}
+                            </div>
+
+                            <div class="controls" id="fix-controls">
+                                <button type="submit" class="btn btn-success">Import</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
