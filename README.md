@@ -12,7 +12,7 @@ to export timesheets for all users aswell as projects. TimeReg supports export
 to PDF and CSV.
 
 
-TimeReg can import ics files into projects.
+TimeReg can import ics files into projects [0].
 
 
 Todo:
@@ -22,3 +22,5 @@ Todo:
 * Include option to show start and end times of registration.
 * Make administrators capable of printing sheets with all registrations on a project.
 * CSV export
+
+[0]: Whole day events are'nt supported.
