@@ -19,8 +19,8 @@ Todo:
 -----
 * Responsiveness!
 * Prettier printing of time sheets.
-* Include option to show start and end times of registration.
+* Include option to show start and end times of registration in export to PDF.
 * Make administrators capable of printing sheets with all registrations on a project and users.
 * CSV export
 
-[0]: Whole day events aren't supported.
+[0]: all-day events aren't supported.
