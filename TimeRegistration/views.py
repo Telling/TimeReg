@@ -4,6 +4,7 @@ from django.template import RequestContext
 from django.core.exceptions import ValidationError
 from django.contrib import messages
 from django.utils import timezone
+from django.utils.safestring import mark_safe
 from django.db.models import Max, Sum
 from django.http import HttpResponse
 from django.contrib.auth.models import User
@@ -13,8 +14,9 @@ from TimeRegistration.forms import OverviewPDFForm, QuicklookForm
 from TimeRegistration.forms import UploadIcsForm
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
-from datetime import date
+from datetime import date, datetime
 from icalendar import Calendar
+from calendar import HTMLCalendar
 
 
 def login_user(request):
@@ -166,7 +168,100 @@ def overview(request):
                               RequestContext(request, context))
 
 
-def time_registration(request, year=None, weeknumber=None):
+class RegistrationCalendar(HTMLCalendar):
+
+    def __init__(self, registrations):
+        super(RegistrationCalendar, self).__init__()
+        date_list = []
+        for reg in registrations:
+            date_list.append(reg.date.day)
+
+        self.dates_of_registrations = date_list
+
+    def formatday(self, day, weekday):
+        if day != 0:
+            cssclass = self.cssclasses[weekday]
+            if date.today().day == day:
+                cssclass += ' today'
+            if day in self.dates_of_registrations:
+                cssclass += ' filled'
+            return self.day_cell(cssclass, day)
+        return self.day_cell('noday', '&nbsp;')
+
+    def formatmonth(self, year, month):
+        self.year, self.month = year, month
+        return super(RegistrationCalendar, self).formatmonth(year, month)
+
+    def formatmonthname(self, year, month, withyear=True):
+        return ""
+
+    def day_cell(self, cssclass, body):
+        if body != '&nbsp;':
+            body = '<a href="/{:02d}/{:02d}/{:02d}">{}<a/>'.format(
+                self.year,
+                self.month,
+                body,
+                body
+            )
+        return '<td class="{}">{}</td>'.format(cssclass, body)
+
+
+# Adds the correct month ints and names to the month switcher in index.html
+def month_switch(context_dict, month, year):
+    today = timezone.now()
+
+    # List to index into instead of calculating month name every time
+    month_names = [
+        '', 'January', 'February', 'March', 'April', 'May',
+        'June', 'July', 'August', 'September', 'October',
+        'November', 'December'
+    ]
+
+    def calc_months(context_dict, month, year):
+        if int(month) is 12:
+            context_dict['next_month'] = '{:02d}'.format(1)
+            context_dict['month_l_year'] = int(year)
+            context_dict['month_r_year'] = int(year) + 1
+        elif int(month) is 1:
+            context_dict['last_month'] = 12
+            context_dict['month_l_year'] = int(year) - 1
+            context_dict['month_r_year'] = int(year)
+            context_dict['next_month'] = '{:02d}'.format(2)
+        else:
+            context_dict['next_month'] = '{:02d}'.format(int(month) + 1)
+            context_dict['month_r_year'] = year
+            context_dict['month_l_year'] = year
+
+    if month:
+        context_dict['last_month'] = '{:02d}'.format(int(month) - 1)
+        context_dict['month_name'] = month_names[int(month)]
+
+        calc_months(context_dict, month, year)
+    else:
+        year = today.year
+        month = today.month
+
+        context_dict['last_month'] = '{:02d}'.format(int(month) - 1)
+        context_dict['month_name'] = month_names[int(month)]
+
+        calc_months(context_dict, month, year)
+
+
+# Adds the correct years to the year switcher in index.html
+def year_switch(context_dict, year):
+    today = timezone.now()
+
+    if year:
+        context_dict['last_year'] = int(year) - 1
+        context_dict['current_year'] = year
+        context_dict['next_year'] = int(year) + 1
+    else:
+        context_dict['last_year'] = '{}'.format(today.year - 1)
+        context_dict['current_year'] = '{}'.format(today.year)
+        context_dict['next_year'] = '{}'.format(today.year + 1)
+
+
+def time_registration(request, year=None, month=None, day=None):
     if request.user.is_authenticated():
         context = {}
 
@@ -174,48 +269,67 @@ def time_registration(request, year=None, weeknumber=None):
         context['current_date'] = '{}-{:0>2}-{:0>2}'.format(
             today.year, today.month, today.day)
 
-        if year:
-            context['last_year'] = int(year) - 1
-            context['current_year'] = year
-            context['next_year'] = int(year) + 1
-        else:
-            context['last_year'] = '{}'.format(today.year - 1)
-            context['current_year'] = '{}'.format(today.year)
-            context['next_year'] = '{}'.format(today.year + 1)
+        year_switch(context, year)
+
+        month_switch(context, month, year)
 
         registrations = TimeRegistration.objects.filter(
             user=request.user).order_by('-date')
 
-        if weeknumber:
+        if year and month and day:
+            date = datetime(int(year), int(month), int(day))
+            context['day'] = date.strftime("%d")
             registrations = registrations.filter(
                 user=request.user,
-                date__year='{}'.format(today.year),
-                week=weeknumber
+                date__year=year,
+                date__month=month,
+                date__day=day
+            ).order_by('-start_time')
+
+            context['calendar'] = mark_safe(
+                RegistrationCalendar(registrations).formatmonth(
+                    int(year), int(month)
+                )
+            )
+        elif year and month:
+            registrations = registrations.filter(
+                user=request.user,
+                date__year=year,
+                date__month=month
             ).order_by('-date')
-            context['weeknumber'] = weeknumber
+
+            context['calendar'] = mark_safe(
+                RegistrationCalendar(registrations).formatmonth(
+                    int(year), int(month)
+                )
+            )
         elif year:
-            weeknumber = date.today().isocalendar()[1]
+            month = today.month
             registrations = registrations.filter(
                 user=request.user,
                 date__year=year,
-                week=weeknumber
+                date__month=month
             ).order_by('-date')
-            context['weeknumber'] = weeknumber
-        elif year and weeknumber:
-            registrations = registrations.filter(
-                user=request.user,
-                date__year=year,
-                week=weeknumber
-            ).order_by('-date')
-            context['weeknumber'] = weeknumber
+
+            context['calendar'] = mark_safe(
+                RegistrationCalendar(registrations).formatmonth(
+                    int(year), int(month)
+                )
+            )
         else:
-            weeknumber = date.today().isocalendar()[1]
+            month = today.month
+            year = today.year
             registrations = registrations.filter(
                 user=request.user,
-                date__year='{}'.format(today.year),
-                week=weeknumber
+                date__year=year,
+                date__month=month
             ).order_by('-date')
-            context['weeknumber'] = weeknumber
+
+            context['calendar'] = mark_safe(
+                RegistrationCalendar(registrations).formatmonth(
+                    int(year), int(month)
+                )
+            )
 
         context['registrations'] = registrations
 
