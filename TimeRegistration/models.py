@@ -20,8 +20,8 @@ class TimeRegistration(models.Model):
     end_time = models.TimeField(null=True, blank=True)
     hours = models.FloatField()
     description = models.CharField(max_length=100)
-    project_stage = models.ForeignKey('Project_stage')
-    project = models.ForeignKey('Project', null=True, blank=True)
+    project_stage = models.ForeignKey('Project_phase', null=True, blank=True)
+    project = models.ForeignKey('Project')
 
     def __unicode__(self):
         return '{} ({})'.format(unicode(self.hours), self.project)
@@ -40,12 +40,12 @@ class Project(models.Model):
         return '{}: {}'.format(unicode(self.project_id), self.name)
 
 
-class Project_stage(models.Model):
+class Project_phase(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=200, null=True, blank=True)
     is_active = models.BooleanField(default=True)
-    users = models.ManyToManyField(User, related_name="project_stage")
+    users = models.ManyToManyField(User, related_name="project_phase")
     project = models.OneToOneField(Project)
 
     def __unicode__(self):
-        return '{}: {}'.format(self.project, self.name)
+        return '{} in {}'.format(self.name, self.project)
