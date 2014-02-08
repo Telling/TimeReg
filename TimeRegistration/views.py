@@ -181,7 +181,7 @@ class RegistrationCalendar(HTMLCalendar):
     def formatday(self, day, weekday):
         if day != 0:
             cssclass = self.cssclasses[weekday]
-            if date.today().day == day:
+            if date.today() == date(self.year, self.month, day):
                 cssclass += ' today'
             if day in self.dates_of_registrations:
                 cssclass += ' filled'

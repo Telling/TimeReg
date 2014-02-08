@@ -23,13 +23,54 @@
             text-align: center !important;
         }
 
-        #td-color {
-            background-color: #e5e5e5;
+        .month {
+            margin: 0 auto !important;
+            float: none !important;
+            border-spacing: 1px;
+            border-collapse: separate;
+            padding: 8px;
         }
 
-        .td-{{ weeknumber }} {
-            font-weight: bold;
+        td {
+            padding: 8px;
         }
+
+        .mon {
+            background-color: #E8E8E8;
+        }
+
+        .tue {
+            background-color: #E8E8E8;
+        }
+
+        .wed {
+            background-color: #E8E8E8;
+        }
+
+        .thu {
+            background-color: #E8E8E8;
+        }
+
+        .fri {
+            background-color: #E8E8E8;
+        }
+
+        .sat {
+            background-color: #E8E8E8;
+        }
+
+        .sun {
+            background-color: #E8E8E8;
+        }
+
+        .today {
+            font-weight:bold;
+        }
+
+        .filled {
+            background-color: #BCED91;
+        }
+
     </style>
 
     <link href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css" rel="stylesheet">
@@ -114,7 +155,12 @@
             </div>
 
             <div class="span5">
-                <h3 class="muted">Registrations</h3>
+                {% if month_name and day %}
+                    <h3 class="muted">Registrations for {{ month_name }} {{ day }}</h3>
+                {% else %}
+                    <h3 class="muted">Registrations for {{ month_name }}</h3>
+                {% endif %}
+
                 {% if registrations %}
                     <table class="table table-striped">
                         <thead>
@@ -142,71 +188,15 @@
             </div>
 
             <div class="span5 offset1">
-                <h3 class="muted">Week</h3>
-                <table class="table table-bordered" id="center-text">
-                    <tbody>
-                        <tr>
-                            <td class="td-01"><a href="/{{ current_year }}/01">1</a></td>
-                            <td class="td-02" id="td-color"><a href="/{{ current_year }}/02">2</a></td>
-                            <td class="td-03"><a href="/{{ current_year }}/03">3</a></td>
-                            <td class="td-04" id="td-color"><a href="/{{ current_year }}/04">4</a></td>
-                            <td class="td-05"><a href="/{{ current_year }}/05">5</a></td>
-                            <td class="td-06" id="td-color"><a href="/{{ current_year }}/06">6</a></td>
-                            <td class="td-07"><a href="/{{ current_year }}/07">7</a></td>
-                            <td class="td-08" id="td-color"><a href="/{{ current_year }}/08">8</a></td>
-                            <td class="td-09"><a href="/{{ current_year }}/09">9</a></td>
-                            <td class="td-10" id="td-color"><a href="/{{ current_year }}/10">10</a></td>
-                            <td class="td-11"><a href="/{{ current_year }}/11">11</a></td>
-                            <td class="td-12" id="td-color"><a href="/{{ current_year }}/12">12</a></td>
-                            <td class="td-13"><a href="/{{ current_year }}/13">13</a></td>
-                        </tr>
-                        <tr>
-                            <td class="td-14" id="td-color"><a href="/{{ current_year }}/14">14</a></td>
-                            <td class="td-15"><a href="/{{ current_year }}/15">15</a></td>
-                            <td class="td-16" id="td-color"><a href="/{{ current_year }}/16">16</a></td>
-                            <td class="td-17"><a href="/{{ current_year }}/17">17</a></td>
-                            <td class="td-18" id="td-color"><a href="/{{ current_year }}/18">18</a></td>
-                            <td class="td-19"><a href="/{{ current_year }}/19">19</a></td>
-                            <td class="td-20" id="td-color"><a href="/{{ current_year }}/20">20</a></td>
-                            <td class="td-21"><a href="/{{ current_year }}/21">21</a></td>
-                            <td class="td-22" id="td-color"><a href="/{{ current_year }}/22">22</a></td>
-                            <td class="td-23"><a href="/{{ current_year }}/23">23</a></td>
-                            <td class="td-24" id="td-color"><a href="/{{ current_year }}/24">24</a></td>
-                            <td class="td-25"><a href="/{{ current_year }}/25">25</a></td>
-                            <td class="td-26" id="td-color"><a href="/{{ current_year }}/26">26</a></td>
-                        </tr>
-                        <tr>
-                            <td class="td-27"><a href="/{{ current_year }}/27">27</a></td>
-                            <td class="td-28" id="td-color"><a href="/{{ current_year }}/28">28</a></td>
-                            <td class="td-29"><a href="/{{ current_year }}/29">29</a></td>
-                            <td class="td-30" id="td-color"><a href="/{{ current_year }}/30">30</a></td>
-                            <td class="td-31"><a href="/{{ current_year }}/31">31</a></td>
-                            <td class="td-32" id="td-color"><a href="/{{ current_year }}/32">32</a></td>
-                            <td class="td-33"><a href="/{{ current_year }}/33">33</a></td>
-                            <td class="td-34" id="td-color"><a href="/{{ current_year }}/34">34</a></td>
-                            <td class="td-35"><a href="/{{ current_year }}/35">35</a></td>
-                            <td class="td-36" id="td-color"><a href="/{{ current_year }}/36">36</a></td>
-                            <td class="td-37"><a href="/{{ current_year }}/37">37</a></td>
-                            <td class="td-38" id="td-color"><a href="/{{ current_year }}/38">38</a></td>
-                            <td class="td-39"><a href="/{{ current_year }}/39">39</a></td>
-                        </tr>
-                        <tr>
-                            <td class="td-40" id="td-color"><a href="/{{ current_year }}/40">40</a></td>
-                            <td class="td-41"><a href="/{{ current_year }}/41">41</a></td>
-                            <td class="td-42" id="td-color"><a href="/{{ current_year }}/42">42</a></td>
-                            <td class="td-43"><a href="/{{ current_year }}/43">43</a></td>
-                            <td class="td-44" id="td-color"><a href="/{{ current_year }}/44">44</a></td>
-                            <td class="td-45"><a href="/{{ current_year }}/45">45</a></td>
-                            <td class="td-46" id="td-color"><a href="/{{ current_year }}/46">46</a></td>
-                            <td class="td-47"><a href="/{{ current_year }}/47">47</a></td>
-                            <td class="td-48" id="td-color"><a href="/{{ current_year }}/48">48</a></td>
-                            <td class="td-49"><a href="/{{ current_year }}/49">49</a></td>
-                            <td class="td-50" id="td-color"><a href="/{{ current_year }}/50">50</a></td>
-                            <td class="td-51"><a href="/{{ current_year }}/51">51</a></td>
-                            <td class="td-52" id="td-color"><a href="/{{ current_year }}/52">52</a></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <h3 class="muted">Calendar</h3>
+                <div class="text-center">
+                    <a href="/{{ month_l_year }}/{{ last_month }}/"><i class="icon-arrow-left"></i></a> {{ month_name }} <a href="/{{ month_r_year }}/{{ next_month }}/"><i class="icon-arrow-right"></i></a>
+                </div>
+
+                <div class="text-center">
+                    {{ calendar }}
+                </div>
+
                 <div class="text-center">
                     <a href="/{{ last_year }}/"><i class="icon-arrow-left"></i></a> {{ current_year }} <a href="/{{ next_year }}/"><i class="icon-arrow-right"></i></a>
                 </div>
