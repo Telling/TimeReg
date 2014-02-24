@@ -10,7 +10,7 @@ class TimeRegForm(forms.ModelForm):
 
     class Meta:
         model = TimeRegistration
-        fields = ('date', 'start_time', 'end_time', 'hours')
+        fields = ('date', 'start_time', 'description', 'end_time', 'hours')
 
 
 class ProjectRegForm(forms.ModelForm):

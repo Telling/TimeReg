@@ -6,6 +6,8 @@ admin.autodiscover()
 urlpatterns = patterns(
     '',
     url(r'^$', 'TimeRegistration.views.time_registration'),
+    url(r'^ajax/project_phases$', 'TimeRegistration.views.list_project_phases',
+        name='list_project_phases'),
     url(r'^remove_registration/(?P<timereg_id>\d+)',
         'TimeRegistration.views.remove_registration'),
     url(r'^(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d{2})',

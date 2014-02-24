@@ -5,10 +5,13 @@ from django.core.exceptions import ValidationError
 from django.contrib import messages
 from django.utils import timezone
 from django.utils.safestring import mark_safe
+from django.utils import simplejson as json
 from django.db.models import Max, Sum
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.core import serializers
 from TimeRegistration.models import TimeRegistration, Project, Profile
+from TimeRegistration.models import Project_phase
 from TimeRegistration.forms import TimeRegForm, ProjectRegForm, ProfileForm
 from TimeRegistration.forms import OverviewPDFForm, QuicklookForm
 from TimeRegistration.forms import UploadIcsForm
@@ -261,6 +264,14 @@ def year_switch(context_dict, year):
         context_dict['next_year'] = '{}'.format(today.year + 1)
 
 
+def list_project_phases(request):
+    project_phases = Project_phase.objects.filter(
+        project=request.GET["project"]
+    )
+    data = serializers.serialize("json", project_phases)
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
 def time_registration(request, year=None, month=None, day=None):
     if request.user.is_authenticated():
         context = {}
@@ -341,6 +352,11 @@ def time_registration(request, year=None, month=None, day=None):
                 timeregistration.week = form.cleaned_data[
                     'date'].isocalendar()[1]
                 timeregistration.project = form.cleaned_data['project']
+                project_phase_id = str(request.POST['project_phase'])
+                if project_phase_id:
+                    timeregistration.project_phase = Project_phase.objects.get(
+                        pk=project_phase_id
+                    )
                 timeregistration.save()
                 messages.success(request,
                                  'Successfully added {} hours on {}'.format(

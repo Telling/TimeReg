@@ -56,15 +56,15 @@
         }
 
         .sat {
-            background-color: #E8E8E8;
+            background-color: #D8D8D8;
         }
 
         .sun {
-            background-color: #E8E8E8;
+            background-color: #D8D8D8;
         }
 
         .today {
-            font-weight:bold;
+            font-weight: bold;
         }
 
         .filled {
@@ -130,6 +130,12 @@
                             </div>
                         </div>
                     </div>
+                    <div class="control-group">
+                        <label class="control-label" id="fix-control-label" for="id_description">Description</label>
+                        <div class="controls" id="fix-controls">
+                            <input id="id_description" name="description" placeholder="Description (optional)" type="text">
+                        </div>
+                    </div>
                 </div>
                 <div class="span5 offset1">
                     <div class="control-group">
@@ -143,6 +149,14 @@
                         <label class="control-label" id="fix-control-label" for="inputDate">Project</label>
                         <div class="controls" id="fix-controls">
                             {{ form.project }}
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" id="fix-control-label" for="inputDate">Phase</label>
+                        <div class="controls" id="fix-controls">
+                            <select id="project_phases_select" name="project_phase">
+                                <option value="" selected="selected">---------</option>
+                            </select>
                         </div>
                     </div>
                     <div class="control-group">
@@ -211,6 +225,22 @@
     <script src="{{ STATIC_URL }}js/bootstrap-datetimepicker.min.js"></script>
 
     <script type="text/javascript">
+        $("#id_project").change(function() {
+            var project = $(this).val();
+            $("#project_phases_select").empty().append('<option>---------</option>');
+            $.getJSON("{% url 'list_project_phases' %}", { project: project }, function(project_phases) {
+                var toAppend = '';
+                var phases = $.parseJSON(project_phases)
+                $.each(phases, function(i, o) {
+                    toAppend += '<option value="' + o.pk + '">' + o.fields.name + '</option>';
+                    });
+
+                $("#project_phases_select").append(toAppend);
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
         $(function() {
             $('#datetimepicker').datetimepicker({
             language: 'en',
@@ -231,7 +261,6 @@
             pickSeconds: false
             });
         });
-
     </script>
 
 {% endblock %}
