@@ -35,31 +35,11 @@
             padding: 8px;
         }
 
-        .mon {
+        .mon, .tue, .wed, .thu, .fri {
             background-color: #E8E8E8;
         }
 
-        .tue {
-            background-color: #E8E8E8;
-        }
-
-        .wed {
-            background-color: #E8E8E8;
-        }
-
-        .thu {
-            background-color: #E8E8E8;
-        }
-
-        .fri {
-            background-color: #E8E8E8;
-        }
-
-        .sat {
-            background-color: #D8D8D8;
-        }
-
-        .sun {
+        .sat, .sun {
             background-color: #D8D8D8;
         }
 
@@ -154,7 +134,7 @@
                     <div class="control-group">
                         <label class="control-label" id="fix-control-label" for="inputDate">Phase</label>
                         <div class="controls" id="fix-controls">
-                            <select id="project_phases_select" name="project_phase">
+                            <select id="project_phases_select" name="project_phase" title="Select a project first" disabled>
                                 <option value="" selected="selected">---------</option>
                             </select>
                         </div>
@@ -228,6 +208,8 @@
         $("#id_project").change(function() {
             var project = $(this).val();
             $("#project_phases_select").empty().append('<option>---------</option>');
+            $('#project_phases_select').prop('disabled', false);
+            $('#project_phases_select').prop('title', '');
             $.getJSON("{% url 'list_project_phases' %}", { project: project }, function(project_phases) {
                 var toAppend = '';
                 var phases = $.parseJSON(project_phases)

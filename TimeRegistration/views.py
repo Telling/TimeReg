@@ -265,11 +265,15 @@ def year_switch(context_dict, year):
 
 
 def list_project_phases(request):
-    project_phases = Project_phase.objects.filter(
-        project=request.GET["project"]
-    )
-    data = serializers.serialize("json", project_phases)
-    return HttpResponse(json.dumps(data), content_type="application/json")
+    project = request.GET['project']
+    if project:
+        project_phases = Project_phase.objects.filter(
+            project=project
+        )
+        data = serializers.serialize("json", project_phases)
+        return HttpResponse(json.dumps(data), content_type="application/json")
+
+    return HttpResponse()
 
 
 def time_registration(request, year=None, month=None, day=None):
