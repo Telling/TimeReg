@@ -268,6 +268,7 @@ def list_project_phases(request):
     project = request.GET['project']
     if project:
         project_phases = Project_phase.objects.filter(
+            users=request.user,
             project=project
         )
         data = serializers.serialize("json", project_phases)
