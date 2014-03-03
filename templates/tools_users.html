@@ -6,45 +6,35 @@
             color: #555;
             text-decoration: none;
             background-color: #e5e5e5;
-            -webkit-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
-            -moz-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
-            box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
-            }
+            -webkit-box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
+            -moz-box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
+            box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
+        }
 
         #tools-users {
             color: #555;
             text-decoration: none;
             background-color: #e5e5e5;
-            -webkit-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
-            -moz-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
-            box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
-            }
-
-        #fix-control-label {
-            width: 111px;
-        }
-
-        #fix-controls {
-            margin-left: 125px;
+            -webkit-box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
+            -moz-box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
+            box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
         }
     </style>
-
-    <link href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-    <div class="row-fluid">
-        <div class="span12 well">
+    <div class="row">
+        <div class="col-md-12 well">
 
-            <div class="row-fluid">
-                <div class="span11">
-                    <h2 class="tk-atrament-web">User adminsitration</h2>
+            <div class="row">
+                <div class="col-md-11">
+                     <h2 class="tk-atrament-web">User adminsitration</h2>
                 </div>
             </div>
 
             {% if messages %}
-            <div class="row-fluid">
-                <div class="span12">
+            <div class="row">
+                <div class="col-md-12">
                     {% for msg in messages %}
                         <div class="alert alert-success">
                             {{ msg }}
@@ -54,92 +44,93 @@
             </div>
             {% endif %}
 
-            <div class="span11">
-                <div class="span5">
-                    <h3 class="muted">Create new user</h3>
-                    <form class="form-horizontal" action="/tools/users/" method="POST">{% csrf_token %}
-                        <div class="control-group">
-                            <label class="control-label" id="fix-control-label" for="inputUsername">Username</label>
-                            <div class="controls" id="fix-controls">
-                                <input type="text" id="inputUsername" placeholder="Username" name="username" required>
+            <div class="col-md-11">
+                <div class="col-md-5">
+                    <h3>Create new user</h3>
+                    <form class="form-horizontal" action="/tools/users/" method="POST" role="form">{% csrf_token %}
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="inputUsername">Username</label>
+                            <div class="input-group col-lg-9">
+                                <input type="text" id="inputUsername" class="form-control" placeholder="Username" name="username" required="required" />
                             </div>
                         </div>
 
-                        <div class="control-group">
-                            <label class="control-label" id="fix-control-label" for="inputFirstname">First name</label>
-                            <div class="controls" id="fix-controls">
-                                <input type="text" id="inputFirstname" placeholder="First name" name="first_name" required>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="inputFirstname">First name</label>
+                            <div class="input-group col-lg-9">
+                                <input type="text" class="form-control" id="inputFirstname" placeholder="First name" name="first_name" required="required" />
                             </div>
                         </div>
 
-                        <div class="control-group">
-                            <label class="control-label" id="fix-control-label" for="inputLastname">Last name</label>
-                            <div class="controls" id="fix-controls">
-                                <input type="text" id="inputLastname" placeholder="Last name" name="last_name" required>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="inputLastname">Last name</label>
+                            <div class="input-group col-lg-9">
+                                <input type="text"  class="form-control" id="inputLastname" placeholder="Last name" name="last_name" required="required" />
                             </div>
                         </div>
 
-                        <div class="control-group">
-                            <label class="control-label" id="fix-control-label" for="inputEmail">Email</label>
-                            <div class="controls" id="fix-controls">
-                                <input type="email" id="inputEmail" placeholder="Email" name="email" required>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="inputEmail">Email</label>
+                            <div class="input-group col-lg-9">
+                                <input type="email" class="form-control" id="inputEmail" placeholder="Email" name="email" required="required" />
                             </div>
                         </div>
 
-                        <div class="control-group">
-                            <label class="control-label" id="fix-control-label" for="inputEmployeeid">ID no.</label>
-                            <div class="controls" id="fix-controls">
-                                <input type="text" id="inputEmployeeid" placeholder="Employee ID" name="employee_id">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="inputEmployeeid">ID no.</label>
+                            <div class="input-group col-lg-9">
+                                <input type="text" class="form-control" id="inputEmployeeid" placeholder="Employee ID" name="employee_id" />
                             </div>
                         </div>
 
-                        <div class="control-group">
-                            <label class="control-label" id="fix-control-label" for="inputDepartment">Department</label>
-                            <div class="controls" id="fix-controls">
-                                <input type="text" id="inputDepartment" placeholder="Department" name="department">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="inputDepartment">Department</label>
+                            <div class="input-group col-lg-9">
+                                <input type="text" class="form-control" id="inputDepartment" placeholder="Department" name="department" />
                             </div>
                         </div>
 
-                        <div class="control-group">
-                            <label class="control-label" id="fix-control-label" for="inputEmpoymentdate">Employment date</label>
-                            <div class="controls" id="fix-controls">
-                                <div class="input-append date" id="datepicker1">
-                                    <input data-format="yyyy-MM-dd" type="text" id="appendedInput" placeholder="Date" name="employment_date">
-                                    <span class="add-on"><i data-date-icon="icon-calendar"></i></span>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="inputEmpoymentdate">Employment date</label>
+                            <div class="input-group col-lg-9">
+                                <div class="input-group date" id="datepickerEmpDate">
+                                    <input data-format="YYYY-MM-DD" type="text" class="form-control" placeholder="Date (optional)" name="employment_date">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="control-group">
-                            <label class="control-label" id="fix-control-label" for="inputPassword">Password</label>
-                            <div class="controls" id="fix-controls">
-                                <input type="password" id="inputPassword" placeholder="Password" name="password" required>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="inputPassword">Password</label>
+                            <div class="input-group col-lg-9">
+                                <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="password" required="required" />
                             </div>
-
-                            <div class="controls" id="fix-controls">
-                                <button type="submit" class="btn btn-success" name="addUser">Create user</button>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-3">
+                                <button type="submit" class="btn btn-success btn-block" name="addUser">Create user</button>
                             </div>
                         </div>
                     </form>
                 </div>
 
                 {% if active_users %}
-                    <div class="span5 offset1">
-                        <h3 class="muted">Disable user</h3>
-                        <form class="form-horizontal" action="/tools/users/disable/" method="GET">
-                            <div class="control-group">
-                                <label class="control-label" id="fix-control-label" for="inputUser">Username</label>
-                                <div class="controls" id="fix-controls">
-                                    <select name="user" required>
+                    <div class="col-md-5 col-lg-offset-1">
+                        <h3>Disable user</h3>
+                        <form class="form-horizontal" action="/tools/users/disable/" method="GET" role="form">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="inputUser">Username</label>
+                                <div class="input-group col-lg-9">
+                                    <select class="form-control" name="user" required="required">
                                         {% for profile in active_users %}
                                             <option value="{{ profile.user.username }}">{{ profile.user.username }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
-                                <div class="control-group">
-                                    <div class="controls" id="fix-controls">
-                                        <button type="submit" class="btn btn-warning">Disable</button>
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-3">
+                                    <button type="submit" class="btn btn-warning btn-block">Disable</button>
                                 </div>
                             </div>
                         </form>
@@ -147,66 +138,62 @@
                 {% endif %}
 
                 {% if disabled_users %}
-                <div class="span5 offset1">
-                    <h3 class="muted">Re-enable user</h3>
-                    <form class="form-horizontal" action="/tools/users/reenable/" method="GET">
-                        <div class="control-group">
-                            <label class="control-label" id="fix-control-label" for="inputUser">Username</label>
-                            <div class="controls" id="fix-controls">
-                                <select name="user" required>
-                                    {% for profile in disabled_users %}
-                                        <option value="{{ profile.user.username }}">{{ profile.user.username }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls" id="fix-controls">
-                                    <button type="submit" class="btn btn-success">Re-enable</button>
+                    <div class="col-md-5 col-lg-offset-1">
+                        <h3>Re-enable user</h3>
+                        <form class="form-horizontal" action="/tools/users/reenable/" method="GET" role="form">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="inputUser">Username</label>
+                                <div class="input-group col-lg-9">
+                                    <select class="form-control" name="user" required="required">
+                                        {% for profile in disabled_users %}
+                                            <option value="{{ profile.user.username }}">{{ profile.user.username }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </div>
-                        </div>
-                    </form>
-                </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-3">
+                                    <button type="submit" class="btn btn-success btn-block">Re-enable</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 {% endif %}
 
                 {% if users %}
-                <div class="span5 offset1">
-                    <h3 class="muted">Administrators</h3>
-                    <form class="form-horizontal" action="/tools/users/make_admin/" method="GET">
-                        <div class="control-group">
-                            <label class="control-label" id="fix-control-label" for="inputUser">Username</label>
-                            <div class="controls" id="fix-controls">
-                                <select name="user" required>
-                                    {% for profile in users %}
-                                        <option value="{{ profile.user.username }}">{{ profile.user.username }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls" id="fix-controls">
-                                    <button type="submit" name="do" class="btn btn-danger">Do</button>
-                                    <button type="submit" name="undo" class="btn btn-danger">Undo</button>
+                    <div class="col-md-5 col-lg-offset-1">
+                        <h3>Administrators</h3>
+                        <form class="form-horizontal" action="/tools/users/make_admin/" method="GET" role="form">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="inputUser">Username</label>
+                                <div class="input-group col-lg-9">
+                                    <select class="form-control" name="user" required="required">
+                                        {% for profile in users %}
+                                            <option value="{{ profile.user.username }}">{{ profile.user.username }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </div>
-                        </div>
-                    </form>
-                </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-3">
+                                    <button type="submit" style="width: 49%;" name="do" class="btn btn-danger">Do</button>
+                                    <button type="submit" style="width: 49%;" name="undo" class="btn btn-danger">Undo</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 {% endif %}
             </div>
         </div>
+    </div>
 {% endblock %}
 
 {% block scripts %}
-
-    <script src="{{ STATIC_URL }}js/bootstrap-datetimepicker.min.js"></script>
-
     <script type="text/javascript">
-        $(function() {
-            $('#datepicker1').datetimepicker({
-            language: 'en',
-            pickTime: false
+        $(function () {
+            $('#datepickerEmpDate').datetimepicker({
+                pickTime: false
             });
         });
     </script>
-
 {% endblock %}

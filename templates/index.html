@@ -6,17 +6,9 @@
             color: #555;
             text-decoration: none;
             background-color: #e5e5e5;
-            -webkit-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
-            -moz-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
-            box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
-            }
-
-        #fix-control-label {
-            width: 65px;
-        }
-
-        #fix-controls {
-            margin-left: 75px;
+            -webkit-box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
+            -moz-box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
+            box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
         }
 
         .table td {
@@ -50,26 +42,23 @@
         .filled {
             background-color: #BCED91;
         }
-
     </style>
 
-    <link href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
+    <div class="row">
+        <div class="col-md-12 well">
 
-    <div class="row-fluid">
-        <div class="span12 well">
-
-            <div class="row-fluid">
-                <div class="span11">
-                    <h2 class="tk-atrament-web">Time Registration</h2>
+            <div class="row">
+                <div class="col-md-11">
+                     <h2 class="tk-atrament-web">Time Registration</h2>
                 </div>
             </div>
 
             {% if messages %}
-            <div class="row-fluid">
-                <div class="span12">
+            <div class="row">
+                <div class="col-md-12">
                     {% for msg in messages %}
                         <div class="alert alert-success">
                             {{ msg }}
@@ -79,78 +68,72 @@
             </div>
             {% endif %}
 
-            <div class="span11">
+            <div class="col-md-12">
                 <h3 class="muted">New Registration</h3>
-                <form class="form-horizontal" id="fix-width" action="/" method="POST">{% csrf_token %}
-                <div class="span5">
-                    <div class="control-group">
-                        <label class="control-label" id="fix-control-label" for="inputDate">Date</label>
-                        <div class="controls" id="fix-controls">
-                            <div class="input-append date" id="datetimepicker">
-                                <input data-format="yyyy-MM-dd" type="text" id="appendedInput" placeholder="Date" value="{{ current_date }}" name="date" required>
-                                <span class="add-on"><i data-date-icon="icon-calendar"></i></span>
+                <form class="form-horizontal" role="form" action="/" method="POST">{% csrf_token %}
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="inputDate" class="col-sm-3 control-label">Date</label>
+                            <div class="input-group date" id="datepicker1">
+                                <input data-format="YYYY-MM-DD" type="text" class="form-control" placeholder="Date" value="{{ current_date }}" name="date" required>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputStartTime" class="col-sm-3 control-label">Start Time</label>
+                            <div class="input-group date" id="timepicker1">
+                                <input data-format="hh:mm" type="text" class="form-control" placeholder="Start Time (optional)" name="start_time">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEndTime" class="col-sm-3 control-label">End Time</label>
+                            <div class="input-group date" id="timepicker2">
+                                <input data-format="hh:mm" type="text" class="form-control" placeholder="End Time (optional)" name="end_time">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputDescription" class="col-sm-3 control-label">Description</label>
+                            <div class="input-group col-lg-9">
+                                <input type="text" class="form-control" placeholder="Description (optional)" name="description">
                             </div>
                         </div>
                     </div>
-                    <div class="control-group">
-                        <label class="control-label" id="fix-control-label" for="inputStartTime">Start Time</label>
-                        <div class="controls" id="fix-controls">
-                            <div class="input-append" id="timepicker1">
-                                <input data-format="hh:mm" type="text" id="inputStartTime" placeholder="Start Time (optional)" name="start_time">
-                                <span class="add-on"><i data-time-icon="icon-time"></i></span>
+                    <div class="col-md-5 col-lg-offset-1">
+                        <div class="form-group">
+                            <label for="inputHours" class="col-sm-3 control-label">Hours</label>
+                            <div class="input-group col-lg-9">
+                                <input type="text" class="form-control" id="inputHours" placeholder="Hours" name="hours" required="required" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            {{ form.project.errors }}
+                            <label class="col-sm-3 control-label" for="inputProject">Project</label>
+                            <div class="input-group col-lg-9">
+                                {{ form.project }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="inputPhase">Phase</label>
+                            <div class="input-group col-lg-9">
+                                <select id="project_phases_select" class="form-control" name="project_phase" title="Select a project first" disabled="disabled">
+                                    <option value="" selected="selected">---------</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-3">
+                                <button type="submit" class="btn btn-success btn-block">Add Registration</button>
                             </div>
                         </div>
                     </div>
-                    <div class="control-group">
-                        <label class="control-label" id="fix-control-label" for="inputEndTime">End Time</label>
-                        <div class="controls" id="fix-controls">
-                            <div class="input-append" id="timepicker2">
-                                <input data-format="hh:mm" type="text" id="inputEndTime" placeholder="End Time (optional)" name="end_time">
-                                <span class="add-on"><i data-time-icon="icon-time"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" id="fix-control-label" for="id_description">Description</label>
-                        <div class="controls" id="fix-controls">
-                            <input id="id_description" name="description" placeholder="Description (optional)" type="text">
-                        </div>
-                    </div>
-                </div>
-                <div class="span5 offset1">
-                    <div class="control-group">
-                        <label class="control-label" id="fix-control-label" for="inputHours">Hours</label>
-                        <div class="controls" id="fix-controls">
-                            <input type="text" id="inputHours" placeholder="Hours" name="hours" required>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        {{ form.project.errors }}
-                        <label class="control-label" id="fix-control-label" for="inputDate">Project</label>
-                        <div class="controls" id="fix-controls">
-                            {{ form.project }}
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" id="fix-control-label" for="inputDate">Phase</label>
-                        <div class="controls" id="fix-controls">
-                            <select id="project_phases_select" name="project_phase" title="Select a project first" disabled>
-                                <option value="" selected="selected">---------</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="controls" id="fix-controls">
-                            <button type="submit" class="btn btn-success">Add Registration</button>
-                        </div>
-                    </div>
-                </div>
                 </form>
             </div>
 
-            <div class="span5">
+            <div class="col-md-5">
                 {% if month_name and day %}
-                    <h3 class="muted">Registrations for {{ month_name }} {{ day }}</h3>
+                     <h3 class="muted">Registrations for {{ month_name }} {{ day }}</h3>
                 {% else %}
                     <h3 class="muted">Registrations for {{ month_name }}</h3>
                 {% endif %}
@@ -162,7 +145,7 @@
                                 <th>Date</th>
                                 <th>Hours</th>
                                 <th>Project</th>
-                                <th>Remove</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -171,7 +154,7 @@
                                 <td style="text-align: left !important;">{{ registration.date }}</td>
                                 <td style="text-align: left !important;">{{ registration.hours }}</td>
                                 <td style="text-align: left !important;">{{ registration.project.name }}</td>
-                                <td style="text-align: center;"><a href="/remove_registration/{{ registration.id }}"><i class="icon-trash"></i></a><td>
+                                <td style="text-align: center;"><a href="/remove_registration/{{ registration.id }}" title="Remove registration"><i class="glyphicon glyphicon-trash"></i></a><td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -181,10 +164,10 @@
                 {% endif %}
             </div>
 
-            <div class="span5 offset1">
+            <div class="col-md-5 col-lg-offset-1">
                 <h3 class="muted">Calendar</h3>
                 <div class="text-center">
-                    <a href="/{{ month_l_year }}/{{ last_month }}/"><i class="icon-arrow-left"></i></a> {{ month_name }} <a href="/{{ month_r_year }}/{{ next_month }}/"><i class="icon-arrow-right"></i></a>
+                    <a href="/{{ month_l_year }}/{{ last_month }}/"><i class="glyphicon glyphicon-arrow-left"></i></a> {{ month_name }} <a href="/{{ month_r_year }}/{{ next_month }}/"><i class="glyphicon glyphicon-arrow-right"></i></a>
                 </div>
 
                 <div class="text-center">
@@ -192,7 +175,7 @@
                 </div>
 
                 <div class="text-center">
-                    <a href="/{{ last_year }}/"><i class="icon-arrow-left"></i></a> {{ current_year }} <a href="/{{ next_year }}/"><i class="icon-arrow-right"></i></a>
+                    <a href="/{{ last_year }}/"><i class="glyphicon glyphicon-arrow-left"></i></a> {{ current_year }} <a href="/{{ next_year }}/"><i class="glyphicon glyphicon-arrow-right"></i></a>
                 </div>
             </div>
         </div>
@@ -201,8 +184,6 @@
 {% endblock %}
 
 {% block scripts %}
-
-    <script src="{{ STATIC_URL }}js/bootstrap-datetimepicker.min.js"></script>
 
     <script type="text/javascript">
         $("#id_project").change(function() {
@@ -223,26 +204,19 @@
     </script>
 
     <script type="text/javascript">
-        $(function() {
-            $('#datetimepicker').datetimepicker({
-            language: 'en',
+    $(function () {
+        $('#datepicker1').datetimepicker({
             pickTime: false
-            });
         });
-
-        $(function() {
-            $('#timepicker1').datetimepicker({
+    });
+    $(function () {
+        $('#timepicker1, #timepicker2').datetimepicker({
+            format: 'HH:mm',
             pickDate: false,
-            pickSeconds: false
-            });
+            pickSeconds: false,
+            pick12HourFormat: false
         });
-
-        $(function() {
-            $('#timepicker2').datetimepicker({
-            pickDate: false,
-            pickSeconds: false
-            });
-        });
+    });
     </script>
 
 {% endblock %}

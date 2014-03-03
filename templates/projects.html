@@ -1,39 +1,30 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<style>
-    #projectsNav {
-        color: #555;
-        text-decoration: none;
-        background-color: #e5e5e5;
-        -webkit-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
-        -moz-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
-        box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
-    }
-
-    #fix-control-label {
-        width: 65px;
-    }
-
-    #fix-controls {
-        margin-left: 75px;
-    }
-</style>
+    <style>
+        #projectsNav {
+            color: #555;
+            text-decoration: none;
+            background-color: #e5e5e5;
+            -webkit-box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
+            -moz-box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
+            box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-    <div class="row-fluid">
-        <div class="span12 well">
-
-            <div class="row-fluid">
-                <div class="span11">
-                    <h2 class="tk-atrament-web">Projects</h2>
+    <div class="row">
+        <div class="col-md-12 well">
+            <div class="row">
+                <div class="col-md-11">
+                     <h2 class="tk-atrament-web">Projects</h2>
                 </div>
             </div>
 
-            <div class="span11">
+            <div class="col-md-11">
                 {% if open_projects %}
-                    <div class="span5">
+                    <div class="col-md-5">
                         <h3 class="muted">Open projects</h3>
                         <table class="table table-striped">
                             <thead>
@@ -51,13 +42,13 @@
                         </table>
                     </div>
                 {% else %}
-                    <div class="span5">
-                        <h3 class="muted">No open projects.</h3>
+                    <div class="col-md-5">
+                         <h3 class="muted">No open projects.</h3>
                     </div>
                 {% endif %}
 
                 {% if closed_projects %}
-                    <div class="span5 offset1">
+                    <div class="col-md-5 col-lg-offset-1">
                         <h3 class="muted">Closed projects</h3>
                         <table class="table table-striped">
                             <thead>
@@ -75,8 +66,8 @@
                         </table>
                     </div>
                 {% else %}
-                    <div class="span5">
-                        <h3 class="muted">No closed projects.</h3>
+                    <div class="col-md-5">
+                         <h3 class="muted">No closed projects.</h3>
                     </div>
                 {% endif %}
             </div>
