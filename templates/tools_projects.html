@@ -33,15 +33,15 @@
             </div>
 
             {% if messages %}
-            <div class="row">
-                <div class="col-md-12">
-                    {% for msg in messages %}
-                        <div class="alert alert-success">
-                            {{ msg }}
-                        </div>
-                    {% endfor %}
+                <div class="row">
+                    <div class="col-md-12">
+                        {% for msg in messages %}
+                            <div class="alert alert-success">
+                                {{ msg }}
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
             {% endif %}
 
             <div class="col-md-12">
@@ -81,6 +81,7 @@
                         </div>
                     </form>
                 </div>
+
                 <div class="col-md-5 col-lg-offset-1">
                     <h3>New project phase</h3>
                     <form class="form-horizontal" action="" method="POST" role="form">{% csrf_token %}
@@ -120,54 +121,149 @@
 
             </div>
 
-            {% if closed_projects %}
-                <div class="col-md-12">
-                    <div class="col-md-5">
-                        <h3>Reopen project</h3>
-                        <form class="form-horizontal" action="/tools/projects/open_project/" method="GET" role="form">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label"for="inputProject">Project</label>
-                                <div class="input-group">
-                                    <select name="project" class="form-control" required="required">
-                                        {% for project in closed_projects %}
-                                            <option value="{{ project.project_id }}">{{ project.name }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-offset-3">
-                                    <button type="submit" class="btn btn-success btn-block">Reopen</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="col-md-5 col-lg-offset-1">
-                        <h3>Close projects</h3>
-                        {% if active_projects %}
-                            <table class="table table-condensed table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Project name</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for project in active_projects %}
-                                    <tr>
-                                        <td>{{ project.name }}</td>
-                                        <td style="text-align: center;"><a href="/tools/projects/close_project/{{ project.project_id }}"><i class="glyphicon glyphicon-lock"></i></a><td>
-                                    </tr>
+            <div class="col-md-12">
+                <div class="col-md-5">
+                    <h3>Reopen project</h3>
+                    <form class="form-horizontal" action="/tools/projects/open_project/" method="GET" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"for="inputProject">Project</label>
+                            <div class="input-group col-lg-9">
+                                <select name="project" class="form-control" required="required">
+                                    {% for project in closed_projects %}
+                                        <option value="{{ project.project_id }}">{{ project.name }}</option>
                                     {% endfor %}
-                                </tbody>
-                            </table>
-                        {% else %}
-                            There's no active projects!
-                        {% endif %}
-                    </div>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-3">
+                                <button type="submit" class="btn btn-success btn-block">Reopen</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-md-5 col-lg-offset-1">
+                <h3>Reopen project phase</h3>
+                    <form class="form-horizontal" action="/tools/projects/open_project_phase/" method="GET" role="form">{% csrf_token %}
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"for="inputProject">Project</label>
+                            <div class="input-group col-lg-9">
+                                <select name="project_id" class="form-control" id="select_project" required="required">
+                                    <option value="" selected="selected">---------</option>
+                                    {% for project in active_projects %}
+                                        <option value="{{ project.pk }}">{{ project.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="inputPhase">Phase</label>
+                            <div class="input-group col-lg-9">
+                                <select id="project_phases_select" class="form-control" name="phase_pk" title="Select a project first" disabled="disabled">
+                                    <option value="" selected="selected">---------</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-3">
+                                <button type="submit" class="btn btn-success btn-block">Reopen</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-        {% endif %}
+
+            <div class="col-md-12">
+                <div class="col-md-5">
+                    <h3>Close projects</h3>
+                    <form class="form-horizontal" action="/tools/projects/close_project/" method="GET" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"for="inputProject">Project</label>
+                            <div class="input-group col-lg-9">
+                                <select name="project_id" class="form-control" required="required">
+                                    {% for project in active_projects %}
+                                        <option value="{{ project.project_id }}">{{ project.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-3">
+                                <button type="submit" class="btn btn-success btn-block">Close</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-md-5 col-lg-offset-1">
+                    <h3>Close project phase</h3>
+                    <form class="form-horizontal" action="/tools/projects/close_project_phase/" method="GET" role="form">{% csrf_token %}
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"for="inputProject">Project</label>
+                            <div class="input-group col-lg-9">
+                                <select name="project_id" class="form-control" id="select_project1" required="required">
+                                    <option value="" selected="selected">---------</option>
+                                    {% for project in active_projects %}
+                                        <option value="{{ project.pk }}">{{ project.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="inputPhase">Phase</label>
+                            <div class="input-group col-lg-9">
+                                <select id="project_phases_select1" class="form-control" name="phase_pk" title="Select a project first" disabled="disabled">
+                                    <option value="" selected="selected">---------</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-3">
+                                <button type="submit" class="btn btn-success btn-block">Close</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+
+    <script type="text/javascript">
+        $("#select_project").change(function() {
+            var project = $(this).val();
+            $("#project_phases_select").empty().append('<option>---------</option>');
+            $('#project_phases_select').prop('disabled', false);
+            $('#project_phases_select').prop('title', '');
+            $.getJSON("{% url 'list_project_phases' %}", { project: project }, function(project_phases) {
+                var toAppend = '';
+                var phases = $.parseJSON(project_phases)
+                $.each(phases, function(i, o) {
+                    toAppend += '<option value="' + o.pk + '">' + o.fields.name + '</option>';
+                    });
+
+                $("#project_phases_select").append(toAppend);
+            });
+        });
+
+        $("#select_project1").change(function() {
+            var project = $(this).val();
+            $("#project_phases_select1").empty().append('<option>---------</option>');
+            $('#project_phases_select1').prop('disabled', false);
+            $('#project_phases_select1').prop('title', '');
+            $.getJSON("{% url 'list_project_phases' %}", { project: project, active: 'True' }, function(project_phases) {
+                var toAppend = '';
+                var phases = $.parseJSON(project_phases)
+                $.each(phases, function(i, o) {
+                    toAppend += '<option value="' + o.pk + '">' + o.fields.name + '</option>';
+                    });
+
+                $("#project_phases_select1").append(toAppend);
+            });
+        });
+    </script>
+
 {% endblock %}

@@ -69,7 +69,7 @@
             {% endif %}
 
             <div class="col-md-12">
-                <h3 class="muted">New Registration</h3>
+                <h3>New Registration</h3>
                 <form class="form-horizontal" role="form" action="/" method="POST">{% csrf_token %}
                     <div class="col-md-5">
                         <div class="form-group">
@@ -133,9 +133,9 @@
 
             <div class="col-md-5">
                 {% if month_name and day %}
-                     <h3 class="muted">Registrations for {{ month_name }} {{ day }}</h3>
+                     <h3>Registrations for {{ month_name }} {{ day }}</h3>
                 {% else %}
-                    <h3 class="muted">Registrations for {{ month_name }}</h3>
+                    <h3>Registrations for {{ month_name }}</h3>
                 {% endif %}
 
                 {% if registrations %}
@@ -165,7 +165,7 @@
             </div>
 
             <div class="col-md-5 col-lg-offset-1">
-                <h3 class="muted">Calendar</h3>
+                <h3>Calendar</h3>
                 <div class="text-center">
                     <a href="/{{ month_l_year }}/{{ last_month }}/"><i class="glyphicon glyphicon-arrow-left"></i></a> {{ month_name }} <a href="/{{ month_r_year }}/{{ next_month }}/"><i class="glyphicon glyphicon-arrow-right"></i></a>
                 </div>
@@ -191,7 +191,7 @@
             $("#project_phases_select").empty().append('<option>---------</option>');
             $('#project_phases_select').prop('disabled', false);
             $('#project_phases_select').prop('title', '');
-            $.getJSON("{% url 'list_project_phases' %}", { project: project }, function(project_phases) {
+            $.getJSON("{% url 'list_project_phases' %}", { project: project, active: 'True' }, function(project_phases) {
                 var toAppend = '';
                 var phases = $.parseJSON(project_phases)
                 $.each(phases, function(i, o) {

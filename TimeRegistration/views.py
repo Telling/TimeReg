@@ -14,7 +14,7 @@ from TimeRegistration.models import TimeRegistration, Project, Profile
 from TimeRegistration.models import Project_phase
 from TimeRegistration.forms import TimeRegForm, ProjectRegForm, ProfileForm
 from TimeRegistration.forms import OverviewPDFForm, QuicklookForm
-from TimeRegistration.forms import UploadIcsForm
+from TimeRegistration.forms import UploadIcsForm, ProjectPhaseCreateForm
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from datetime import date, datetime
@@ -266,10 +266,16 @@ def year_switch(context_dict, year):
 
 def list_project_phases(request):
     project = request.GET['project']
+    active = False
+
+    if 'active' in request.GET:
+        active = True
+
     if project:
         project_phases = Project_phase.objects.filter(
             users=request.user,
-            project=project
+            project=project,
+            is_active=active
         )
         data = serializers.serialize("json", project_phases)
         return HttpResponse(json.dumps(data), content_type="application/json")
@@ -350,7 +356,7 @@ def time_registration(request, year=None, month=None, day=None):
         context['registrations'] = registrations
 
         if request.method == "POST":
-            form = TimeRegForm(request.POST)
+            form = TimeRegForm(request.POST, user=request.user)
             if form.is_valid():
                 timeregistration = form.save(commit=False)
                 timeregistration.user = request.user
@@ -370,7 +376,7 @@ def time_registration(request, year=None, month=None, day=None):
                                  ))
                 return redirect('/')
         else:
-            form = TimeRegForm()
+            form = TimeRegForm(user=request.user)
 
         context['form'] = form
 
@@ -477,20 +483,44 @@ def tools_projects(request):
             return current_id
 
     if request.method == 'POST':
+        new_project = 'newProject' in request.POST
+        new_phase = 'newPhase' in request.POST
+
         form = ProjectRegForm(request.POST)
-        if form.is_valid():
-            project = form.save(commit=False)
-            project.project_id = next_project_id() + 1
-            project.is_active = True
-            project.save()
-            form.save_m2m()
-            messages.success(request, 'Successfully added project {}'.format(
-                project.name))
-            return redirect('/tools/projects/')
+        createProjectPhaseForm = ProjectPhaseCreateForm(request.POST)
+
+        if new_project:
+            if form.is_valid():
+                project = form.save(commit=False)
+                project.project_id = next_project_id() + 1
+                project.is_active = True
+                project.save()
+                form.save_m2m()
+                messages.success(
+                    request,
+                    'Successfully added project {}'.format(project.name)
+                )
+                return redirect('/tools/projects/')
+
+        if new_phase:
+            if createProjectPhaseForm.is_valid():
+                projectPhase = createProjectPhaseForm.save(commit=False)
+                projectPhase.is_active = True
+                projectPhase.save()
+                createProjectPhaseForm.save_m2m()
+                messages.success(
+                    request,
+                    'Successfully added project phase {}'.format(
+                        projectPhase.name
+                    )
+                )
+                return redirect('/tools/projects/')
     else:
         form = ProjectRegForm()
+        createProjectPhaseForm = ProjectPhaseCreateForm()
 
     context['project_form'] = form
+    context['project_phase_form'] = createProjectPhaseForm
 
     active_projects = projects.filter(is_active=True).order_by('project_id')
     context['active_projects'] = active_projects
@@ -502,7 +532,8 @@ def tools_projects(request):
                               RequestContext(request, context))
 
 
-def close_project(request, project_id):
+def close_project(request):
+    project_id = request.GET['project_id']
     Project.objects.filter(project_id=project_id).update(is_active=False)
     messages.success(request, 'Successfully closed project #{}'.format(
         project_id))
@@ -515,6 +546,24 @@ def open_project(request):
     Project.objects.filter(project_id=project_id).update(is_active=True)
     messages.success(request, 'Successfully reopened project #{}'.format(
         project_id))
+
+    return redirect('/tools/projects/')
+
+
+def open_project_phase(request):
+    phase_pk = request.GET['phase_pk']
+    Project_phase.objects.filter(pk=phase_pk).update(is_active=True)
+    messages.success(request, 'Successfully reopened project phase #{}'.format(
+        phase_pk))
+
+    return redirect('/tools/projects/')
+
+
+def close_project_phase(request):
+    phase_pk = request.GET['phase_pk']
+    Project_phase.objects.filter(pk=phase_pk).update(is_active=False)
+    messages.success(request, 'Successfully closed project phase #{}'.format(
+        phase_pk))
 
     return redirect('/tools/projects/')
 
