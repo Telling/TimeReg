@@ -17,10 +17,8 @@ TimeReg can import ics files into projects [0].
 
 Todo:
 -----
-* Responsiveness!
 * Prettier printing of time sheets.
 * Include option to show start and end times of registration in export to PDF.
 * Make administrators capable of printing sheets with all registrations on a project and users.
-* CSV export
 
 [0]: all-day events aren't supported.
