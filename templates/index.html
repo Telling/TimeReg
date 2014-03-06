@@ -74,28 +74,28 @@
                     <div class="col-md-5">
                         <div class="form-group">
                             <label for="inputDate" class="col-sm-3 control-label">Date</label>
-                            <div class="input-group date" id="datepicker1">
+                            <div class="input-group date col-sm-7 col-lg-9" id="datepicker1">
                                 <input data-format="YYYY-MM-DD" type="text" class="form-control" placeholder="Date" value="{{ current_date }}" name="date" required>
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputStartTime" class="col-sm-3 control-label">Start Time</label>
-                            <div class="input-group date" id="timepicker1">
+                            <div class="input-group date col-sm-7 col-lg-9" id="timepicker1">
                                 <input data-format="hh:mm" type="text" class="form-control" placeholder="Start Time (optional)" name="start_time">
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputEndTime" class="col-sm-3 control-label">End Time</label>
-                            <div class="input-group date" id="timepicker2">
+                            <div class="input-group date col-sm-7 col-lg-9" id="timepicker2">
                                 <input data-format="hh:mm" type="text" class="form-control" placeholder="End Time (optional)" name="end_time">
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputDescription" class="col-sm-3 control-label">Description</label>
-                            <div class="input-group col-xs-12 col-lg-9 col-sm-9">
+                            <div class="input-group col-xs-12 col-lg-9 col-sm-7">
                                 <input type="text" class="form-control" placeholder="Description (optional)" name="description">
                             </div>
                         </div>
@@ -103,30 +103,29 @@
                     <div class="col-md-5 col-lg-offset-1">
                         <div class="form-group">
                             <label for="inputHours" class="col-sm-3 control-label">Hours</label>
-                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
+                            <div class="input-group col-lg-9 col-sm-7 col-xs-12">
                                 <input type="text" class="form-control" id="inputHours" placeholder="Hours" name="hours" required="required" />
                             </div>
                         </div>
                         <div class="form-group">
                             {{ form.project.errors }}
                             <label class="col-sm-3 control-label" for="inputProject">Project</label>
-                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
+                            <div class="input-group col-lg-9 col-sm-7 col-xs-12">
                                 {{ form.project }}
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="inputPhase">Phase</label>
-                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
+                            <label class="col-sm-3 control-label" for="inputphase">phase</label>
+                            <div class="input-group col-lg-9 col-sm-7 col-xs-12">
                                 <select id="project_phases_select" class="form-control" name="project_phase" title="Select a project first" disabled="disabled">
                                     <option value="" selected="selected">---------</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-md-offset-3 col-sm-offset-3">
-                                <div class="input-group col-lg-12 col-sm-12 col-xs-12">
+                            <label class="col-sm-3 control-label"></label>
+                            <div class="input-group col-lg-9 col-sm-7 col-xs-12">
                                 <button type="submit" class="btn btn-success btn-block">Add Registration</button>
-                                </div>
                             </div>
                         </div>
                     </div>

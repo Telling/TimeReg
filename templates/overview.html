@@ -40,22 +40,22 @@
                 <h3>Quicklook</h3>
                 <form class="form-horizontal" action="/overview/" method="POST" role="form">{% csrf_token %}
                     <div class="form-group">
-                        <label for="inputFromDate" class="col-sm-3 control-label">From</label>
-                        <div class="input-group date" id="datepickerFrom">
+                        <label for="inputFromDate" class="col-sm-2 control-label">From</label>
+                        <div class="input-group date col-sm-8 col-lg-9" id="datepickerFrom">
                             <input data-format="YYYY-MM-DD" type="text" class="form-control" placeholder="Date" name="quick_start_date" required>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="inputToDate" class="col-sm-3 control-label">To</label>
-                        <div class="input-group date" id="datepickerTo">
+                        <label for="inputToDate" class="col-sm-2 control-label">To</label>
+                        <div class="input-group date col-sm-8 col-lg-9" id="datepickerTo">
                             <input data-format="YYYY-MM-DD" type="text" class="form-control" placeholder="Date" name="quick_end_date" required>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label" for="inputProject">Project</label>
-                        <div class="input-group col-lg-9 col-sm-9 col-xs-12">
+                        <label class="col-sm-2 control-label" for="inputProject">Project</label>
+                        <div class="input-group col-lg-9 col-sm-8 col-xs-12">
                             {{ quicklook_form.quick_project }}
                         </div>
                         {% if quicklook_form.quick_project.errors %}
@@ -66,7 +66,8 @@
                     </div>
 
                     <div class="form-group">
-                        <div class="col-sm-offset-3">
+                        <label class="col-sm-2 control-label" for="inputphase"></label>
+                        <div class="input-group col-lg-9 col-sm-8 col-xs-12">
                             <button type="submit" class="btn btn-success btn-block" name="quicklook">Quicklook</button>
                         </div>
                     </div>
@@ -77,31 +78,32 @@
                 <h3>Export</h3>
                 <form class="form-horizontal" action="/overview/" method="POST" role="form">{% csrf_token %}
                     <div class="form-group">
-                        <label for="inputFromDateExport" class="col-sm-3 control-label">From</label>
-                        <div class="input-group date" id="datepickerFromExport">
+                        <label for="inputFromDateExport" class="col-sm-2 control-label">From</label>
+                        <div class="input-group date col-sm-8 col-lg-9" id="datepickerFromExport">
                             <input data-format="YYYY-MM-DD" type="text" class="form-control" placeholder="Date" name="start_date" required="required" />
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="inputFromDateExport" class="col-sm-3 control-label">To</label>
-                        <div class="input-group date" id="datepickerToExport">
+                        <label for="inputFromDateExport" class="col-sm-2 control-label">To</label>
+                        <div class="input-group date col-sm-8 col-lg-9" id="datepickerToExport">
                             <input data-format="YYYY-MM-DD" type="text" class="form-control" placeholder="Date" name="end_date" required="required" />
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         {{ export_form.project.errors }}
-                        <label class="col-sm-3 control-label" for="inputProject">Project</label>
-                        <div class="input-group col-lg-9 col-sm-9 col-xs-12">
+                        <label class="col-sm-2 control-label" for="inputProject">Project</label>
+                        <div class="input-group col-lg-9 col-sm-8">
                             {{ export_form.project }}
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <div class="col-sm-offset-3">
-                            <button type="submit" style="width: 49%;" class="btn btn-success" name="exportPDF">Export PDF</button>
-                            <button type="submit" style="width: 49%;" class="btn btn-success" name="exportCSV">Export CSV</button>
+                        <label class="col-sm-2 control-label" for="inputphase"></label>
+                        <div class="input-group col-lg-9 col-sm-8">
+                            <button type="submit" style="width: 50%;" class="btn btn-success" name="exportPDF">Export PDF</button>
+                            <button type="submit" style="width: 50%;" class="btn btn-success" name="exportCSV">Export CSV</button>
                         </div>
                     </div>
                 </form>
