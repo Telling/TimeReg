@@ -17,6 +17,7 @@ from TimeRegistration.forms import OverviewPDFForm, QuicklookForm
 from TimeRegistration.forms import UploadIcsForm, ProjectPhaseCreateForm
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
+import csv
 from datetime import date, datetime
 from icalendar import Calendar
 from calendar import HTMLCalendar
@@ -122,50 +123,85 @@ def create_pdf(user, project, start_date, end_date):
     return response
 
 
+def create_csv(user, project, start_date, end_date):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+
+    registrations = TimeRegistration.objects.filter(
+        user=user,
+        project=project,
+        date__range=['{}'.format(start_date), '{}'.format(end_date)]
+    ).order_by('date')
+
+    writer = csv.writer(response)
+    writer.writerow(
+        ['Date', 'Start Time', 'End Time', 'Hours', 'Project', 'Project phase']
+    )
+
+    for reg in registrations:
+        writer.writerow(
+            ['{}'.format(reg.date),
+             '{}'.format(reg.start_time),
+             '{}'.format(reg.end_time),
+             '{}'.format(reg.hours),
+             '{}'.format(reg.project),
+             '{}'.format(reg.project_phase)]
+        )
+
+    return response
+
+
 def overview(request):
     context = {}
 
     # Check if the post request contains the buttons html names
     quicklook = 'quicklook' in request.POST
-    export = 'export' in request.POST
+    export_pdf = 'exportPDF' in request.POST
+    export_csv = 'exportCSV' in request.POST
 
-    if request.method == 'POST' and quicklook is True:
+    if request.method == 'POST':
         quicklook_form = QuicklookForm(request.POST)
+        export_form = OverviewPDFForm(request.POST)
 
-        if quicklook_form.is_valid():
-            start_date = quicklook_form.cleaned_data['quick_start_date']
-            context['start_date'] = start_date
-            end_date = quicklook_form.cleaned_data['quick_end_date']
-            context['end_date'] = end_date
-            registrations = TimeRegistration.objects.filter(
-                user=request.user,
-                project=quicklook_form.cleaned_data['quick_project'],
-                date__range=['{}'.format(start_date), '{}'.format(end_date)]
-            ).order_by('date')
+        if quicklook:
+            if quicklook_form.is_valid():
+                start_date = quicklook_form.cleaned_data['quick_start_date']
+                context['start_date'] = start_date
+                end_date = quicklook_form.cleaned_data['quick_end_date']
+                context['end_date'] = end_date
+                registrations = TimeRegistration.objects.filter(
+                    user=request.user,
+                    project=quicklook_form.cleaned_data['quick_project'],
+                    date__range=[
+                        '{}'.format(start_date), '{}'.format(end_date)
+                    ]
+                ).order_by('date')
 
-            if not registrations:
-                context['empty_registrations'] = True
-            else:
-                context['registrations'] = registrations
-                hour_sum = registrations.aggregate(Sum('hours'))
-                context['total_hours'] = hour_sum['hours__sum']
+                if not registrations:
+                    context['empty_registrations'] = True
+                else:
+                    context['registrations'] = registrations
+                    hour_sum = registrations.aggregate(Sum('hours'))
+                    context['total_hours'] = hour_sum['hours__sum']
+
+        if export_pdf or export_csv:
+            if export_form.is_valid():
+                user = request.user
+                project = export_form.cleaned_data['project']
+                start_date = export_form.cleaned_data['start_date']
+                end_date = export_form.cleaned_data['end_date']
+
+                if export_pdf:
+                    return create_pdf(user, project, start_date, end_date)
+
+                if export_csv:
+                    return create_csv(user, project, start_date, end_date)
+
     else:
         quicklook_form = QuicklookForm()
+        export_form = OverviewPDFForm()
 
-    if request.method == 'POST' and export is True:
-        pdf_form = OverviewPDFForm(request.POST)
-
-        if pdf_form.is_valid():
-            user = request.user
-            project = pdf_form.cleaned_data['project']
-            start_date = pdf_form.cleaned_data['start_date']
-            end_date = pdf_form.cleaned_data['end_date']
-
-            return create_pdf(user, project, start_date, end_date)
-    else:
-        pdf_form = OverviewPDFForm()
-
-    context['pdf_form'] = pdf_form
+    context['export_form'] = export_form
     context['quicklook_form'] = quicklook_form
     return render_to_response('overview.html',
                               RequestContext(request, context))
@@ -633,7 +669,7 @@ def show_profile(request):
             user.save()
             messages.success(request, 'Successfully changed password.')
 
-        form = UploadIcsForm(request.POST, request.FILES)
+        form = UploadIcsForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             ics_file = request.FILES['ics_file']
             project = form.cleaned_data['projects']
@@ -647,7 +683,7 @@ def show_profile(request):
             return redirect('/profile/')
 
     else:
-        form = UploadIcsForm()
+        form = UploadIcsForm(user=request.user)
 
     context['form'] = form
 

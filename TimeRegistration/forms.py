@@ -94,9 +94,17 @@ class ProfileForm(forms.ModelForm):
 
 
 class UploadIcsForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super(UploadIcsForm, self).__init__(*args, **kwargs)
+        self.fields['projects'].queryset = Project.objects.filter(
+            is_active=True, users=user
+        )
+
     ics_file = forms.FileField()
     projects = forms.ModelChoiceField(
-        queryset=Project.objects.filter(is_active=True),
+        queryset=Project.objects.none(),
         required=False,
         label='Projects',
         widget=forms.Select(attrs={'class': 'form-control'})
