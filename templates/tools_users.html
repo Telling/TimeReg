@@ -50,49 +50,49 @@
                     <form class="form-horizontal" action="/tools/users/" method="POST" role="form">{% csrf_token %}
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="inputUsername">Username</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 <input type="text" id="inputUsername" class="form-control" placeholder="Username" name="username" required="required" />
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="inputFirstname">First name</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 <input type="text" class="form-control" id="inputFirstname" placeholder="First name" name="first_name" required="required" />
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="inputLastname">Last name</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 <input type="text"  class="form-control" id="inputLastname" placeholder="Last name" name="last_name" required="required" />
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="inputEmail">Email</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 <input type="email" class="form-control" id="inputEmail" placeholder="Email" name="email" required="required" />
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="inputEmployeeid">ID no.</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 <input type="text" class="form-control" id="inputEmployeeid" placeholder="Employee ID" name="employee_id" />
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="inputDepartment">Department</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 <input type="text" class="form-control" id="inputDepartment" placeholder="Department" name="department" />
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="inputEmpoymentdate">Employment date</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 <div class="input-group date" id="datepickerEmpDate">
                                     <input data-format="YYYY-MM-DD" type="text" class="form-control" placeholder="Date (optional)" name="employment_date">
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span>
@@ -102,7 +102,7 @@
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="inputPassword">Password</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="password" required="required" />
                             </div>
                         </div>
@@ -120,7 +120,7 @@
                         <form class="form-horizontal" action="/tools/users/disable/" method="GET" role="form">
                             <div class="form-group">
                                 <label class="col-sm-3 control-label" for="inputUser">Username</label>
-                                <div class="input-group col-lg-9">
+                                <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                     <select class="form-control" name="user" required="required">
                                         {% for profile in active_users %}
                                             <option value="{{ profile.user.username }}">{{ profile.user.username }}</option>
@@ -143,7 +143,7 @@
                         <form class="form-horizontal" action="/tools/users/reenable/" method="GET" role="form">
                             <div class="form-group">
                                 <label class="col-sm-3 control-label" for="inputUser">Username</label>
-                                <div class="input-group col-lg-9">
+                                <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                     <select class="form-control" name="user" required="required">
                                         {% for profile in disabled_users %}
                                             <option value="{{ profile.user.username }}">{{ profile.user.username }}</option>
@@ -166,7 +166,7 @@
                         <form class="form-horizontal" action="/tools/users/make_admin/" method="GET" role="form">
                             <div class="form-group">
                                 <label class="col-sm-3 control-label" for="inputUser">Username</label>
-                                <div class="input-group col-lg-9">
+                                <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                     <select class="form-control" name="user" required="required">
                                         {% for profile in users %}
                                             <option value="{{ profile.user.username }}">{{ profile.user.username }}</option>

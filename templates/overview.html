@@ -55,7 +55,7 @@
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label" for="inputProject">Project</label>
-                        <div class="input-group">
+                        <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                             {{ quicklook_form.quick_project }}
                         </div>
                         {% if quicklook_form.quick_project.errors %}
@@ -73,35 +73,35 @@
                 </form>
             </div>
 
-            <div class="col-md-5 col-lg-offset-1">
+            <div class="col-md-5 col-lg-offset-1 hidden-xs">
                 <h3>Export</h3>
                 <form class="form-horizontal" action="/overview/" method="POST" role="form">{% csrf_token %}
                     <div class="form-group">
                         <label for="inputFromDateExport" class="col-sm-3 control-label">From</label>
                         <div class="input-group date" id="datepickerFromExport">
-                            <input data-format="yyyy-MM-dd" type="text" class="form-control" placeholder="Date" name="start_date" required="required" />
+                            <input data-format="YYYY-MM-DD" type="text" class="form-control" placeholder="Date" name="start_date" required="required" />
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="inputFromDateExport" class="col-sm-3 control-label">To</label>
                         <div class="input-group date" id="datepickerToExport">
-                            <input data-format="yyyy-MM-dd" type="text" class="form-control" placeholder="Date" name="end_date" required="required" />
+                            <input data-format="YYYY-MM-DD" type="text" class="form-control" placeholder="Date" name="end_date" required="required" />
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
                         </div>
                     </div>
                     <div class="form-group">
-                        {{ pdf_form.project.errors }}
+                        {{ export_form.project.errors }}
                         <label class="col-sm-3 control-label" for="inputProject">Project</label>
-                        <div class="input-group">
-                            {{ pdf_form.project }}
+                        <div class="input-group col-lg-9 col-sm-9 col-xs-12">
+                            {{ export_form.project }}
                         </div>
                     </div>
 
                     <div class="form-group">
                         <div class="col-sm-offset-3">
-                            <button type="submit" class="btn btn-success col-lg-6" name="export">Export PDF</button>
-                            <button type="submit" class="btn btn-success col-lg-6" name="export">Export CSV</button>
+                            <button type="submit" style="width: 49%;" class="btn btn-success" name="exportPDF">Export PDF</button>
+                            <button type="submit" style="width: 49%;" class="btn btn-success" name="exportCSV">Export CSV</button>
                         </div>
                     </div>
                 </form>

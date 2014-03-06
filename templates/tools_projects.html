@@ -50,27 +50,27 @@
                     <form class="form-horizontal" action="" method="POST" role="form">{% csrf_token %}
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="inputName">Name</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 <input type="text" class="form-control" id="inputName" placeholder="Name" name="name" required="required" />
                             </div>
                         </div>
                         <div class="form-group">
                             {{ project_form.manager.errors }}
                             <label class="col-sm-3 control-label" for="inputManager">Manager</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 {{ project_form.manager }}
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="inputDesc">Description</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 <input type="text" id="inputDesc" class="form-control" maxlength="200" placeholder="Description" name="description" />
                             </div>
                         </div>
                         <div class="form-group">
                             {{ project_form.users.errors }}
                             <label class="col-sm-3 control-label" for="inputUsers">Members</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 {{ project_form.users }}
                             </div>
                         </div>
@@ -87,27 +87,27 @@
                     <form class="form-horizontal" action="" method="POST" role="form">{% csrf_token %}
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="inputName">Name</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 <input type="text" class="form-control" id="inputName" placeholder="Name" name="name" required="required" />
                             </div>
                         </div>
                         <div class="form-group">
                             {{ project_phase_form.project.errors }}
                             <label class="col-sm-3 control-label" for="inputProject">Project</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 {{ project_phase_form.project }}
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="inputDesc">Description</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 <input type="text" id="inputDesc" class="form-control" maxlength="200" placeholder="Description" name="description" />
                             </div>
                         </div>
                         <div class="form-group">
                             {{ project_phase_form.users.errors }}
                             <label class="col-sm-3 control-label" for="inputUsers">Members</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 {{ project_phase_form.users }}
                             </div>
                         </div>
@@ -127,7 +127,7 @@
                     <form class="form-horizontal" action="/tools/projects/open_project/" method="GET" role="form">
                         <div class="form-group">
                             <label class="col-sm-3 control-label"for="inputProject">Project</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 <select name="project" class="form-control" required="required">
                                     {% for project in closed_projects %}
                                         <option value="{{ project.project_id }}">{{ project.name }}</option>
@@ -148,7 +148,7 @@
                     <form class="form-horizontal" action="/tools/projects/open_project_phase/" method="GET" role="form">{% csrf_token %}
                         <div class="form-group">
                             <label class="col-sm-3 control-label"for="inputProject">Project</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 <select name="project_id" class="form-control" id="select_project" required="required">
                                     <option value="" selected="selected">---------</option>
                                     {% for project in active_projects %}
@@ -159,7 +159,7 @@
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="inputPhase">Phase</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 <select id="project_phases_select" class="form-control" name="phase_pk" title="Select a project first" disabled="disabled">
                                     <option value="" selected="selected">---------</option>
                                 </select>
@@ -180,7 +180,7 @@
                     <form class="form-horizontal" action="/tools/projects/close_project/" method="GET" role="form">
                         <div class="form-group">
                             <label class="col-sm-3 control-label"for="inputProject">Project</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 <select name="project_id" class="form-control" required="required">
                                     {% for project in active_projects %}
                                         <option value="{{ project.project_id }}">{{ project.name }}</option>
@@ -201,7 +201,7 @@
                     <form class="form-horizontal" action="/tools/projects/close_project_phase/" method="GET" role="form">{% csrf_token %}
                         <div class="form-group">
                             <label class="col-sm-3 control-label"for="inputProject">Project</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 <select name="project_id" class="form-control" id="select_project1" required="required">
                                     <option value="" selected="selected">---------</option>
                                     {% for project in active_projects %}
@@ -212,7 +212,7 @@
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="inputPhase">Phase</label>
-                            <div class="input-group col-lg-9">
+                            <div class="input-group col-lg-9 col-sm-9 col-xs-12">
                                 <select id="project_phases_select1" class="form-control" name="phase_pk" title="Select a project first" disabled="disabled">
                                     <option value="" selected="selected">---------</option>
                                 </select>
