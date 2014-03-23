@@ -1,13 +1,30 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
     <head>
-        <title>TimeRegistration</title>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>TimeReg</title>
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
         <link href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/bootstrap.min.css" rel="stylesheet" media="screen" />
         <link href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/bootstrap-theme.min.css" rel="stylesheet" media="screen" />
-        <link rel="icon" type="image/x-icon" href="{{ STATIC_URL }}img/favicon.ico" />
         <link href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+        <link rel="icon" type="image/x-icon" href="{{ STATIC_URL }}img/favicon.ico" />
+        <link rel="apple-touch-icon-precomposed" href="{{ STATIC_URL }}img/favicon-152.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="{{ STATIC_URL }}img/favicon-152.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ STATIC_URL }}img/favicon-144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="{{ STATIC_URL }}img/favicon-120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ STATIC_URL }}img/favicon-72.png" />
+        <link rel="apple-touch-icon-precomposed" href="{{ STATIC_URL }}img/favicon-57.png" />
+        <link rel="icon" href="{{ STATIC_URL }}img/favicon-32.png" sizes="32x32" />
+        <meta name="msapplication-TileColor" content="##f5f5f5" />
+        <meta name="msapplication-TileImage" content="{{ STATIC_URL }}img/favicon-144.png" />
 
         <style type="text/css">
             body {
@@ -94,14 +111,14 @@
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
                             <li id="homeNav"><a href="/">Home</a></li>
-                            <li id="overviewNav"><a href="/overview">Overview</a></li>
-                            <li id="projectsNav"><a href="/projects">Projects</a></li>
+                            <li id="overviewNav"><a href="/overview/">Overview</a></li>
+                            <li id="projectsNav"><a href="/projects/">Projects</a></li>
                             {% if user.is_superuser %}
                                 <li class="dropdown" id="tools">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    <li id="tools-users"><a href="/tools/users">Users</a></li>
-                                    <li id="tools-projects"><a href="/tools/projects">Projects</a></li>
+                                    <li id="tools-users"><a href="/tools/users/">Users</a></li>
+                                    <li id="tools-projects"><a href="/tools/projects/">Projects</a></li>
                                 </ul>
                                 </li>
                             {% endif %}
