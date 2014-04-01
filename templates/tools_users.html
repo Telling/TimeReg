@@ -79,14 +79,14 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="inputEmployeeid">ID no.</label>
                             <div class="input-group col-lg-9 col-sm-7 col-xs-12">
-                                <input type="text" class="form-control" id="inputEmployeeid" placeholder="Employee ID" name="employee_id" />
+                                <input type="text" class="form-control" id="inputEmployeeid" placeholder="Employee ID (optional)" name="employee_id" />
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="inputDepartment">Department</label>
                             <div class="input-group col-lg-9 col-sm-7 col-xs-12">
-                                <input type="text" class="form-control" id="inputDepartment" placeholder="Department" name="department" />
+                                <input type="text" class="form-control" id="inputDepartment" placeholder="Department (optional)" name="department" />
                             </div>
                         </div>
 
@@ -116,7 +116,7 @@
                 </div>
 
                 {% if active_users %}
-                    <div class="col-md-5 col-lg-offset-1">
+                    <div class="col-md-5 col-lg-offset-2">
                         <h3>Disable user</h3>
                         <form class="form-horizontal" action="/tools/users/disable/" method="GET" role="form">
                             <div class="form-group">
@@ -140,7 +140,7 @@
                 {% endif %}
 
                 {% if disabled_users %}
-                    <div class="col-md-5 col-lg-offset-1">
+                    <div class="col-md-5 col-lg-offset-2">
                         <h3>Re-enable user</h3>
                         <form class="form-horizontal" action="/tools/users/reenable/" method="GET" role="form">
                             <div class="form-group">
@@ -164,7 +164,7 @@
                 {% endif %}
 
                 {% if users %}
-                    <div class="col-md-5 col-lg-offset-1">
+                    <div class="col-md-5 col-lg-offset-2">
                         <h3>Administrators</h3>
                         <form class="form-horizontal" action="/tools/users/make_admin/" method="GET" role="form">
                             <div class="form-group">

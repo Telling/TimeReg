@@ -10,6 +10,24 @@
             -moz-box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
             box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
         }
+
+        .inline-width {
+            width: 250px !important;
+        }
+
+        .clickable{
+            cursor: pointer;
+        }
+
+        .panel-heading span {
+            margin-top: -20px;
+            font-size: 15px;
+        }
+
+        .row-fix {
+            margin-top: 20px;
+            padding: 0 10px;
+        }
     </style>
 {% endblock %}
 
@@ -18,59 +36,206 @@
         <div class="col-md-12 well">
             <div class="row">
                 <div class="col-md-11">
-                     <h2 class="tk-atrament-web">Projects</h2>
+                    <h2>Projects</h2>
                 </div>
             </div>
 
+            {% if messages %}
+            <div class="row">
+                <div class="col-md-12">
+                    {% for msg in messages %}
+                        <div class="alert alert-warning">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            {{ msg }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
             <div class="col-md-11">
-                {% if open_projects %}
-                    <div class="col-md-5">
-                        <h3>Open projects</h3>
-                        <table class="table table-striped">
-                            <thead>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Hours</th>
-                            </thead>
-                            {% for project in open_projects %}
-                                <tr>
-                                    <td>{{ project.project_id }}</td>
-                                    <td>{{ project.name }}</td>
-                                    <td>{{ project.total_hours }}</td>
-                                </tr>
+                <h4>Choose project</h4>
+                <form class="form-inline" action="/projects/" method="POST" role="form">{% csrf_token %}
+                    <div class="form-group">
+                        <label class="sr-only">Project</label>
+                        <select id="project_select" class="form-control inline-width" name="project">
+                            <option value="" selected="selected">---------</option>
+                            {% for project in projects %}
+                                <option value="{{ project.pk }}">{{ project.name }}</option>
                             {% endfor %}
-                        </table>
+                        </select>
                     </div>
-                {% else %}
-                    <div class="col-md-5">
-                         <h3>No open projects.</h3>
+                    <div class="form-group">
+                        <label class="sr-only">Phase</label>
+                        <select id="project_phase_select" class="form-control inline-width" name="project_phase" title="Please select a project first." disabled="disabled">
+                            <option selected="selected">---------</option>
+                        </select>
                     </div>
+
+                    <button type="submit" class="btn btn-default">Get info</button>
+
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="all" title="See all registrations on project or phase.">
+                            All
+                        </label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-md-12">
+                {% if project_name %}
+                    <div class=row>
+                        <div class="col-md-11">
+                            <h3>{{ project_name }}</h3>
+                        </div>
+                    </div>
+
+                    {% if phases %}
+                        {% for phase in phases %}
+                        {% if forloop.first %}
+                            <div class="row row-fix">
+                        {% endif %}
+                            <div class="col-md-4">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">{{ phase.name }}</h3>
+                                        <span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
+                                    </div>
+                                    {% if phase.description %}
+                                        <div class="panel-body" style="display: none;">
+                                            <p>{{ phase.description }}</p>
+                                        </div>
+                                    {% endif %}
+                                    {% if phase.timeregistration_set.all %}
+                                        <div class="table-slide" style="display: none;">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Hours</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for reg in phase.timeregistration_set.all %}
+                                                    <tr>
+                                                        <td>{{ reg.date }}</td>
+                                                        <td>{{ reg.hours }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    {% else %}
+                                        <div class="panel-body" style="display: none;">
+                                            <p>No registrations for this phase.</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% if forloop.counter|divisibleby:3 %}
+                            </div>
+                            <div class="row row-fix">
+                        {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
+                    <div class="col-md-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title" style="color: darkred;">Registrations not on a phase</h3>
+                                <span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
+                            </div>
+                            <div class="panel-body" style="display: none;">
+                                <p>Registrations on {{ project_name }}, which aren't assoicated with a phase.</p>
+                            </div>
+                            <div class="table-slide" style="display: none;">
+                                <table class="table">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Hours</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for reg in timeregistrations_no_phase %}
+                                    <tr>
+                                        <td>{{ reg.date }}</td>
+                                        <td>{{ reg.hours }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 {% endif %}
 
-                {% if closed_projects %}
-                    <div class="col-md-5 col-lg-offset-1">
-                        <h3>Closed projects</h3>
-                        <table class="table table-striped">
-                            <thead>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Hours</th>
-                            </thead>
-                            {% for project in closed_projects %}
-                                <tr>
-                                    <td>{{ project.project_id }}</td>
-                                    <td>{{ project.name }}</td>
-                                    <td>{{ project.total_hours }}</td>
-                                </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-                {% else %}
-                    <div class="col-md-5">
-                         <h3 class="muted">No closed projects.</h3>
-                    </div>
-                {% endif %}
             </div>
+
+            {% if phase_project_name %}
+            <div class=row>
+                <div class="col-md-11">
+                    <h3>{{ phase_project_name }}</h3>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if phase %}
+            <div class="col-md-3">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Hours</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for reg in phase %}
+                        <tr>
+                            <td>{{ reg.date }}</td>
+                            <td>{{ reg.hours }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
         </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        $("#project_select").change(function() {
+            var project = $(this).val();
+            $("#project_phase_select").empty().append('<option value="">---------</option>');
+            $('#project_phase_select').prop('disabled', false);
+            $('#project_phase_select').prop('title', '');
+            $.getJSON("{% url 'list_project_phases' %}", { project: project, active: 'True' }, function(project_phases) {
+                var toAppend = '';
+                var phases = $.parseJSON(project_phases)
+                $.each(phases, function(i, o) {
+                    toAppend += '<option value="' + o.pk + '">' + o.fields.name + '</option>';
+                    });
+
+                $("#project_phase_select").append(toAppend);
+            });
+        });
+
+        $(document).on('click', '.panel-heading span.clickable', function(e){
+            var $this = $(this);
+            if(!$this.hasClass('panel-collapsed')) {
+                $this.parents('.panel').find('.table-slide').slideUp();
+                $this.parents('.panel').find('.panel-body').slideUp();
+                $this.addClass('panel-collapsed');
+                $this.find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+            } else {
+                $this.parents('.panel').find('.table-slide').slideDown();
+                $this.parents('.panel').find('.panel-body').slideDown();
+                $this.removeClass('panel-collapsed');
+                $this.find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+            }
+        })
+    </script>
+
 {% endblock %}

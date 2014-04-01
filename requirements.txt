@@ -1,8 +1,10 @@
-Django==1.5.1
-South==0.8.1
+Django==1.6.2
+South==0.8.4
+django-debug-toolbar==1.0.1
 icalendar==3.5
 psycopg2==2.5
 python-dateutil==2.1
 pytz==2013.7
 reportlab==2.7
 six==1.4.1
+sqlparse==0.1.11

@@ -29,7 +29,7 @@ class TimeRegistration(models.Model):
 
 class Project(models.Model):
     name = models.CharField(max_length=100)
-    project_id = models.IntegerField()
+    project_id = models.IntegerField(unique=True)
     manager = models.ForeignKey(
         User, null=True, blank=True, related_name='manager_of_project')
     description = models.CharField(max_length=200, null=True, blank=True)

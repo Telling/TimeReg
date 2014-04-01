@@ -29,10 +29,12 @@
 
         .mon, .tue, .wed, .thu, .fri {
             background-color: #E8E8E8;
+            text-align: center;
         }
 
         .sat, .sun {
             background-color: #D8D8D8;
+            text-align: center;
         }
 
         .today {
@@ -61,6 +63,7 @@
                 <div class="col-md-12">
                     {% for msg in messages %}
                         <div class="alert alert-success">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                             {{ msg }}
                         </div>
                     {% endfor %}
@@ -79,14 +82,14 @@
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="start_time">
                             <label for="inputStartTime" class="col-sm-3 control-label">Start Time</label>
                             <div class="input-group date col-sm-7 col-lg-9" id="timepicker1">
                                 <input data-format="hh:mm" type="text" class="form-control" placeholder="Start Time (optional)" name="start_time">
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="end_time">
                             <label for="inputEndTime" class="col-sm-3 control-label">End Time</label>
                             <div class="input-group date col-sm-7 col-lg-9" id="timepicker2">
                                 <input data-format="hh:mm" type="text" class="form-control" placeholder="End Time (optional)" name="end_time">
@@ -104,21 +107,20 @@
                         <div class="form-group">
                             <label for="inputHours" class="col-sm-3 control-label">Hours</label>
                             <div class="input-group col-lg-9 col-sm-7 col-xs-12">
-                                <input type="text" class="form-control" id="inputHours" placeholder="Hours" name="hours" required="required" />
+                                <input type="tel" class="form-control" id="inputHours" placeholder="Hours" name="hours" title="Hours in decimal representation." required="required" />
                             </div>
                         </div>
-                        <div class="form-group">
-                            {{ form.project.errors }}
+                        <div class="form-group {% if form.project.errors %}has-error{% endif %}">
                             <label class="col-sm-3 control-label" for="inputProject">Project</label>
                             <div class="input-group col-lg-9 col-sm-7 col-xs-12">
                                 {{ form.project }}
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="inputphase">phase</label>
+                            <label class="col-sm-3 control-label" for="inputphase">Phase</label>
                             <div class="input-group col-lg-9 col-sm-7 col-xs-12">
-                                <select id="project_phases_select" class="form-control" name="project_phase" title="Select a project first" disabled="disabled">
-                                    <option value="" selected="selected">---------</option>
+                                <select id="project_phases_select" class="form-control" name="project_phase" title="Please select a project first." disabled="disabled">
+                                    <option selected="selected">---------</option>
                                 </select>
                             </div>
                         </div>
@@ -189,7 +191,7 @@
     <script type="text/javascript">
         $("#id_project").change(function() {
             var project = $(this).val();
-            $("#project_phases_select").empty().append('<option>---------</option>');
+            $("#project_phases_select").empty().append('<option value="">---------</option>');
             $('#project_phases_select').prop('disabled', false);
             $('#project_phases_select').prop('title', '');
             $.getJSON("{% url 'list_project_phases' %}", { project: project, active: 'True' }, function(project_phases) {
@@ -210,6 +212,7 @@
             pickTime: false
         });
     });
+
     $(function () {
         $('#timepicker1, #timepicker2').datetimepicker({
             format: 'HH:mm',
@@ -219,5 +222,34 @@
         });
     });
     </script>
+
+    <script type="text/javascript">
+        $("#timepicker2").focusout(function() {
+            // For timepicker1
+            var start = $('#timepicker1').data('date');
+            var startParts = start.split(':');
+            var startInMinutes = (parseInt(startParts[0]) * 60) + parseInt(startParts[1]);
+
+            // For timepicker2
+            var end = $(this).data('date');
+            var endParts = end.split(':');
+            var endInMinutes = (parseInt(endParts[0]) * 60) + parseInt(endParts[1]);
+
+            // Calculate the difference and make it decimal
+            var differenceInDecimal = (endInMinutes - startInMinutes) / 60;
+
+            if(differenceInDecimal > 0) {
+                $('#inputHours').val(Math.round(differenceInDecimal * 100) / 100);
+                $('#start_time').removeClass("has-error");
+                $('#end_time').removeClass("has-error");
+            } else {
+                $('#start_time').addClass("has-error");
+                $('#end_time').addClass("has-error");
+                $('#inputHours').val("");
+            }
+
+        });
+    </script>
+
 
 {% endblock %}

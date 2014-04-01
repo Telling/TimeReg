@@ -1,11 +1,11 @@
 from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.core.exceptions import ValidationError
 from django.contrib import messages
 from django.utils import timezone
 from django.utils.safestring import mark_safe
-from django.utils import simplejson as json
 from django.db.models import Max, Sum
 from django.http import HttpResponse
 from django.contrib.auth.models import User
@@ -17,10 +17,11 @@ from TimeRegistration.forms import OverviewPDFForm, QuicklookForm
 from TimeRegistration.forms import UploadIcsForm, ProjectPhaseCreateForm
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
-import csv
 from datetime import date, datetime
 from icalendar import Calendar
 from calendar import HTMLCalendar
+import csv
+import json
 
 
 def login_user(request):
@@ -49,28 +50,63 @@ def logout_user(request):
     return redirect('/')
 
 
+@login_required
 def projects(request):
-    if request.user.is_authenticated():
-        context = {}
+    context = {}
+    user = request.user
 
-        projects = request.user.projects.all().annotate(
-            total_hours=Sum('timeregistration__hours')).order_by('project_id')
+    projects = request.user.projects.filter(
+        is_active=True).order_by('project_id')
 
-        open_projects = projects.filter(is_active=True)
-        context['open_projects'] = open_projects
+    context['projects'] = projects
 
-        closed_projects = projects.filter(is_active=False)
-        context['closed_projects'] = closed_projects
+    if request.POST:
+        project_set = request.POST.get('project')
+        phase_set = request.POST.get('project_phase')
+        #all_is_set = request.POST.get('all')
 
-        return render_to_response('projects.html',
-                                  RequestContext(request, context))
-    else:
-        return render_to_response('index.html', RequestContext(request))
+        if project_set and phase_set:
+            project = Project.objects.get(pk=project_set)
+            phase = Project_phase.objects.get(pk=phase_set)
+            context['phase_project_name'] = project.name
+
+            timeregistrations_phase = TimeRegistration.objects.filter(
+                project=project, project_phase=phase, user=user
+            )
+
+            context['phase'] = timeregistrations_phase
+
+        elif project_set:
+            project = Project.objects.get(pk=project_set)
+            context['project_name'] = project.name
+
+            phases = Project_phase.objects.prefetch_related(
+                'timeregistration_set'
+            ).filter(users=user, is_active=True, project=project)
+
+            timeregistrations_no_phase = TimeRegistration.objects.filter(
+                project=project, project_phase=None, user=user
+            )
+
+            context['timeregistrations_no_phase'] = timeregistrations_no_phase
+
+            context['phases'] = phases
+        else:
+            messages.warning(request,
+                             'Please choose a project and optionally a phase.')
+
+    # projects = request.user.projects.all().annotate(
+        # total_hours=Sum('timeregistration__hours')).order_by('project_id')
+
+    return render_to_response('projects.html',
+                              RequestContext(request, context))
 
 
 def create_pdf(user, project, start_date, end_date):
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+    response['Content-Disposition'] = 'attachment; \
+        filename="{0}_{1}_{2}.pdf"'.format(project, start_date, end_date)
+
     pdf = canvas.Canvas(response, pagesize=A4)
     pdf.setFont('Helvetica', 10)
 
@@ -125,7 +161,8 @@ def create_pdf(user, project, start_date, end_date):
 
 def create_csv(user, project, start_date, end_date):
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+    response['Content-Disposition'] = 'attachment; \
+        filename="{0}_{1}_{2}.csv"'.format(project, start_date, end_date)
 
     registrations = TimeRegistration.objects.filter(
         user=user,
@@ -139,18 +176,19 @@ def create_csv(user, project, start_date, end_date):
     )
 
     for reg in registrations:
-        writer.writerow(
-            ['{}'.format(reg.date),
-             '{}'.format(reg.start_time),
-             '{}'.format(reg.end_time),
-             '{}'.format(reg.hours),
-             '{}'.format(reg.project),
-             '{}'.format(reg.project_phase)]
-        )
+        writer.writerow([
+            '{}'.format(reg.date),
+            '{}'.format(reg.start_time),
+            '{}'.format(reg.end_time),
+            '{}'.format(reg.hours),
+            '{}'.format(reg.project),
+            '{}'.format(reg.project_phase)
+        ])
 
     return response
 
 
+@login_required
 def overview(request):
     context = {}
 
@@ -164,6 +202,7 @@ def overview(request):
         export_form = OverviewPDFForm(request.POST)
 
         if quicklook:
+            export_form = OverviewPDFForm()
             if quicklook_form.is_valid():
                 start_date = quicklook_form.cleaned_data['quick_start_date']
                 context['start_date'] = start_date
@@ -185,6 +224,7 @@ def overview(request):
                     context['total_hours'] = hour_sum['hours__sum']
 
         if export_pdf or export_csv:
+            quicklook_form = QuicklookForm()
             if export_form.is_valid():
                 user = request.user
                 project = export_form.cleaned_data['project']
@@ -319,6 +359,8 @@ def list_project_phases(request):
     return HttpResponse()
 
 
+# Can't use login_required decorator here, because login page and index is the
+# same. Should probably be fixed?
 def time_registration(request, year=None, month=None, day=None):
     if request.user.is_authenticated():
         context = {}
@@ -399,10 +441,9 @@ def time_registration(request, year=None, month=None, day=None):
                 timeregistration.week = form.cleaned_data[
                     'date'].isocalendar()[1]
                 timeregistration.project = form.cleaned_data['project']
-                project_phase_id = str(request.POST['project_phase'])
-                if project_phase_id:
+                if request.POST['project_phase'] != 'no_phase':
                     timeregistration.project_phase = Project_phase.objects.get(
-                        pk=project_phase_id
+                        pk=str(request.POST['project_phase'])
                     )
                 timeregistration.save()
                 messages.success(request,
@@ -422,6 +463,7 @@ def time_registration(request, year=None, month=None, day=None):
         return render_to_response('index.html', RequestContext(request))
 
 
+@login_required
 def tools_users(request):
     context = {}
 
@@ -465,6 +507,7 @@ def tools_users(request):
                               RequestContext(request, context))
 
 
+@login_required
 def disable_user(request):
     username = request.GET['user']
     user = User.objects.get(username=username)
@@ -476,6 +519,7 @@ def disable_user(request):
     return redirect('/tools/users/')
 
 
+@login_required
 def reenable_user(request):
     username = request.GET['user']
     user = User.objects.get(username=username)
@@ -486,6 +530,7 @@ def reenable_user(request):
     return redirect('/tools/users')
 
 
+@login_required
 def do_undo_admin(request):
     username = request.GET['user']
     user = User.objects.get(username=username)
@@ -506,6 +551,7 @@ def do_undo_admin(request):
     return redirect('/tools/users/')
 
 
+@login_required
 def tools_projects(request):
     context = {}
 
@@ -568,6 +614,7 @@ def tools_projects(request):
                               RequestContext(request, context))
 
 
+@login_required
 def close_project(request):
     project_id = request.GET['project_id']
     Project.objects.filter(project_id=project_id).update(is_active=False)
@@ -577,6 +624,7 @@ def close_project(request):
     return redirect('/tools/projects/')
 
 
+@login_required
 def open_project(request):
     project_id = request.GET['project']
     Project.objects.filter(project_id=project_id).update(is_active=True)
@@ -586,6 +634,7 @@ def open_project(request):
     return redirect('/tools/projects/')
 
 
+@login_required
 def open_project_phase(request):
     phase_pk = request.GET['phase_pk']
     Project_phase.objects.filter(pk=phase_pk).update(is_active=True)
@@ -595,6 +644,7 @@ def open_project_phase(request):
     return redirect('/tools/projects/')
 
 
+@login_required
 def close_project_phase(request):
     phase_pk = request.GET['phase_pk']
     Project_phase.objects.filter(pk=phase_pk).update(is_active=False)
@@ -604,6 +654,7 @@ def close_project_phase(request):
     return redirect('/tools/projects/')
 
 
+@login_required
 def remove_registration(request, timereg_id):
     TimeRegistration.objects.filter(id=timereg_id).delete()
     messages.success(request, 'Successfully removed registration')
@@ -653,6 +704,7 @@ def parse_ics(ics_file, project, user):
         print e
 
 
+@login_required
 def show_profile(request):
     context = {}
     user = request.user
