@@ -202,6 +202,7 @@ def overview(request):
         export_form = OverviewPDFForm(request.POST)
 
         if quicklook:
+            # if this is a quicklook form, we need an empty export form.
             export_form = OverviewPDFForm()
             if quicklook_form.is_valid():
                 start_date = quicklook_form.cleaned_data['quick_start_date']
@@ -224,6 +225,7 @@ def overview(request):
                     context['total_hours'] = hour_sum['hours__sum']
 
         if export_pdf or export_csv:
+            # If this is export form, we need an empty quicklook form.
             quicklook_form = QuicklookForm()
             if export_form.is_valid():
                 user = request.user
@@ -379,21 +381,27 @@ def time_registration(request, year=None, month=None, day=None):
         if year and month and day:
             date = datetime(int(year), int(month), int(day))
             context['day'] = date.strftime("%d")
+
+            # Registrations to show in the calendar.
+            calendar_registrations = registrations.filter(
+                date__year=year,
+                date__month=month
+            ).order_by('-date')
+
+            # Registrations for the chosen date.
             registrations = registrations.filter(
-                user=request.user,
                 date__year=year,
                 date__month=month,
                 date__day=day
             ).order_by('-start_time')
 
             context['calendar'] = mark_safe(
-                RegistrationCalendar(registrations).formatmonth(
+                RegistrationCalendar(calendar_registrations).formatmonth(
                     int(year), int(month)
                 )
             )
         elif year and month:
             registrations = registrations.filter(
-                user=request.user,
                 date__year=year,
                 date__month=month
             ).order_by('-date')
@@ -406,7 +414,6 @@ def time_registration(request, year=None, month=None, day=None):
         elif year:
             month = today.month
             registrations = registrations.filter(
-                user=request.user,
                 date__year=year,
                 date__month=month
             ).order_by('-date')
@@ -420,7 +427,6 @@ def time_registration(request, year=None, month=None, day=None):
             month = today.month
             year = today.year
             registrations = registrations.filter(
-                user=request.user,
                 date__year=year,
                 date__month=month
             ).order_by('-date')
