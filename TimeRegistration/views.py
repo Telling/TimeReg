@@ -88,6 +88,8 @@ def projects(request):
                 project=project, project_phase=None, user=user
             )
 
+            print timeregistrations_no_phase
+
             context['timeregistrations_no_phase'] = timeregistrations_no_phase
 
             context['phases'] = phases
