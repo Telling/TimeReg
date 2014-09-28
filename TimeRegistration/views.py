@@ -63,7 +63,7 @@ def projects(request):
     if request.POST:
         project_set = request.POST.get('project')
         phase_set = request.POST.get('project_phase')
-        #all_is_set = request.POST.get('all')
+        # all_is_set = request.POST.get('all')
 
         if project_set and phase_set:
             project = Project.objects.get(pk=project_set)
