@@ -9,8 +9,8 @@ phases.
 
 TimeReg allows users to export timesheets, containing their registrations, for
 the projects they've been working on, ~~aswell as users with administrator rights
-to export timesheets for all users aswell as projects. TimeReg supports export
-to PDF and CSV.~~
+to export timesheets for all users aswell as projects.~~ TimeReg supports export
+to PDF and CSV.
 
 
 TimeReg can import ics files into projects [0].
