@@ -26,6 +26,9 @@
         <meta name="msapplication-TileColor" content="##f5f5f5" />
         <meta name="msapplication-TileImage" content="{{ STATIC_URL }}img/favicon-144.png" />
 
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="translucent black">
+
         <style type="text/css">
             body {
                 padding-top: 20px;
@@ -146,6 +149,19 @@
     <script src="{{ STATIC_URL }}js/moment.min.js"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-datetimepicker.min.js"></script>
     <script src="{{ STATIC_URL }}bootstrap-3.1.1-dist/js/bootstrap.min.js"></script>
+    <!--Change the default behavior for links, as to make the wepapp on the phone-->
+    <!--work more like a native one.-->
+    <script type="text/javascript">
+        var a=document.getElementsByTagName("a");
+        for(var i=0;i<a.length;i++)
+        {
+            a[i].onclick=function()
+            {
+                window.location=this.getAttribute("href");
+                return false
+            }
+        }
+    </script>
     {% block scripts %}
     {% endblock %}
     </body>

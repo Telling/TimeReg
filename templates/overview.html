@@ -87,6 +87,7 @@
                         </div>
                     </div>
                     <div class="form-group {% if export_form.project.errors %}has-error{% endif %}">
+                        {{ export_form.project.errors }}
                         <label class="col-sm-2 control-label" for="inputProject">Project</label>
                         <div class="input-group col-lg-9 col-sm-8">
                             {{ export_form.project }}
